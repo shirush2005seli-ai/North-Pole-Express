@@ -1,0 +1,928 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+
+  <title>My North Pole | North Pole Express</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f7efe5;
+      color: #493329;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    a { color: #7b263b; }
+
+    header {
+      background: #fffaf3;
+      border-bottom: 1px solid #dbc8ad;
+      padding: 18px max(18px, calc((100% - 1100px)/2));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      color: #7b263b;
+      font-size: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logout {
+      background: transparent;
+      border: 1px solid #7b263b;
+      color: #7b263b;
+      border-radius: 25px;
+      padding: 9px 16px;
+      cursor: pointer;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 35px 20px 70px;
+    }
+
+    .welcome {
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    .welcome .snowflake {
+      font-size: 40px;
+    }
+
+    h1, h2, h3 {
+      color: #7b263b;
+      font-weight: normal;
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 39px);
+      margin: 12px 0;
+    }
+
+    .subtitle {
+      color: #806c5c;
+      line-height: 1.7;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .card {
+      background: #fffdf8;
+      border: 1px solid #ddc6ae;
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(70,40,20,.05);
+      min-width: 0;
+    }
+
+    .card h2 {
+      font-size: 23px;
+      margin-top: 0;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #806c5c;
+      line-height: 1.6;
+    }
+
+    .icon {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin: 13px 0 6px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #dcc8b5;
+      border-radius: 9px;
+      background: #fff;
+      color: #493329;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    input:focus, textarea:focus {
+      outline: 2px solid #b58a63;
+    }
+
+    .primary-button {
+      background: #7b263b;
+      border: none;
+      border-radius: 9px;
+      padding: 12px 20px;
+      color: white;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .primary-button:hover {
+      background: #5b192a;
+    }
+
+    .primary-button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .secondary-button {
+      display: inline-block;
+      background: #fff;
+      border: 1px solid #7b263b;
+      border-radius: 9px;
+      padding: 11px 18px;
+      color: #7b263b;
+      text-decoration: none;
+      margin-top: 12px;
+    }
+
+    .saved-item {
+      padding: 14px;
+      border: 1px solid #ecddd0;
+      border-radius: 10px;
+      margin-top: 12px;
+      background: #fffaf5;
+      overflow-wrap: anywhere;
+    }
+
+    .saved-item strong {
+      color: #7b263b;
+    }
+
+    .saved-item p {
+      margin: 6px 0;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 11px;
+      border-radius: 20px;
+      background: #eee4d7;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .status.paid,
+    .status.mailed {
+      background: #e4f1e5;
+      color: #315c39;
+    }
+
+    .message {
+      margin: 15px 0;
+      padding: 12px;
+      border-radius: 9px;
+      background: #f1e6d8;
+      color: #573b2f;
+      display: none;
+      overflow-wrap: anywhere;
+    }
+
+    .message.error {
+      display: block;
+      background: #fce8e8;
+      color: #9b2634;
+    }
+
+    .message.success {
+      display: block;
+      background: #e4f1e5;
+      color: #315c39;
+    }
+
+    #dashboard { display: none; }
+
+    #loading {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    footer {
+      padding: 30px 15px;
+      text-align: center;
+      color: #967e68;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card { padding: 20px; }
+
+      .brand { font-size: 17px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="loading" role="status">
+    <div style="font-size:40px">❄️</div>
+    <p>Opening your North Pole account...</p>
+  </div>
+
+  <div id="dashboard">
+
+    <header>
+      <a href="index.html" class="brand">
+        🎄 North Pole Express
+      </a>
+
+      <div class="header-actions">
+        <a href="index.html">Home</a>
+        <button class="logout" id="logoutButton">
+          Log Out
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="welcome">
+        <div class="snowflake">❄️</div>
+
+        <h1 id="welcomeName">
+          Welcome to My North Pole!
+        </h1>
+
+        <p class="subtitle">
+          Your own little corner of Christmas magic.
+          <br>
+          Your family's letters and memories,
+          beautifully kept in one place.
+        </p>
+      </section>
+
+      <div id="message" class="message"
+           role="status" aria-live="polite"></div>
+
+      <div class="dashboard-grid">
+
+        <!-- ACCOUNT INFORMATION -->
+        <section class="card">
+          <div class="icon">👤</div>
+          <h2>My Account</h2>
+
+          <p>Your personal account information.</p>
+
+          <form id="profileForm">
+            <label for="fullName">Full Name</label>
+            <input id="fullName" maxlength="120"
+                   autocomplete="name">
+
+            <label for="email">Email Address</label>
+            <input id="email" type="email"
+                   readonly>
+
+            <button class="primary-button"
+                    type="submit">
+              Save My Information
+            </button>
+          </form>
+        </section>
+
+        <!-- SHOP -->
+        <section class="card">
+          <div class="icon">🎁</div>
+          <h2>Christmas Shop</h2>
+
+          <p>
+            Create another personalized Christmas
+            letter for someone special.
+          </p>
+
+          <p>
+            Your account keeps your family
+            information for future visits.
+          </p>
+
+          <a class="secondary-button"
+             href="index.html">
+            Explore Christmas Letters
+          </a>
+        </section>
+
+        <!-- FAMILY -->
+        <section class="card">
+          <div class="icon">🎅</div>
+          <h2>My Family</h2>
+
+          <p>
+            Save family profiles so you don't need
+            to enter everything again next year.
+          </p>
+
+          <div id="childrenList"></div>
+
+          <h3>Add a Family Profile</h3>
+
+          <form id="childForm">
+            <label for="childName">Child's First Name</label>
+            <input id="childName" maxlength="100"
+                   required>
+
+            <label for="childAge">Age (Optional)</label>
+            <input id="childAge" type="number"
+                   min="0" max="17">
+
+            <label for="childDetails">
+              What Should Santa Know?
+            </label>
+
+            <textarea id="childDetails"
+              maxlength="3000"
+              placeholder="Favorite activities, achievements, Christmas wishes..."></textarea>
+
+            <button class="primary-button"
+                    type="submit">
+              Save Family Profile
+            </button>
+          </form>
+        </section>
+
+        <!-- ADDRESSES -->
+        <section class="card">
+          <div class="icon">💌</div>
+          <h2>My Mailing Addresses</h2>
+
+          <p>
+            Save a mailing address for future
+            personalized letters.
+          </p>
+
+          <div id="addressList"></div>
+
+          <h3>Add an Address</h3>
+
+          <form id="addressForm">
+
+            <label for="recipient">
+              Recipient Name
+            </label>
+            <input id="recipient" required>
+
+            <label for="street">Street Address</label>
+            <input id="street" required>
+
+            <label for="apartment">
+              Apartment / Unit (Optional)
+            </label>
+            <input id="apartment">
+
+            <label for="city">City</label>
+            <input id="city" required>
+
+            <label for="state">State / Region</label>
+            <input id="state">
+
+            <label for="postal">ZIP / Postal Code</label>
+            <input id="postal" required>
+
+            <label for="country">Country</label>
+            <input id="country"
+                   value="US" required>
+
+            <button class="primary-button"
+                    type="submit">
+              Save Mailing Address
+            </button>
+
+          </form>
+        </section>
+
+        <!-- ORDERS -->
+        <section class="card wide">
+          <div class="icon">📜</div>
+          <h2>My Christmas Letters & Orders</h2>
+
+          <p>
+            See your order history, payment
+            confirmation, and mailing progress.
+          </p>
+
+          <div id="ordersList"></div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer>
+      ✧ Made with Christmas magic ✧
+      <br>
+      North Pole Express
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    "use strict";
+
+    const SUPABASE_URL =
+      "https://yeubpbvxihqhodwspuav.supabase.co";
+
+    // Publishable key only.
+    // Never insert a secret or service-role key.
+    const SUPABASE_KEY =
+      "sb_publishable_JcAJkEMletFG5TGXA8ny3Q_cIW2qrrp";
+
+    const db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    let currentUser = null;
+
+    const $ = id => document.getElementById(id);
+
+    function notify(text, type = "success") {
+      const element = $("message");
+      element.textContent = text;
+      element.className = "message " + type;
+    }
+
+    function node(tag, text, className) {
+      const el = document.createElement(tag);
+
+      if (text !== undefined && text !== null) {
+        el.textContent = String(text);
+      }
+
+      if (className) el.className = className;
+      return el;
+    }
+
+    function clear(element) {
+      element.replaceChildren();
+    }
+
+    function requireUser() {
+      if (!currentUser) {
+        throw new Error("Please log in again.");
+      }
+    }
+
+    // REQUIRE AUTHENTICATED USER
+    async function initialize() {
+      try {
+        const { data, error } =
+          await db.auth.getUser();
+
+        if (error || !data.user) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        currentUser = data.user;
+
+        await loadAccount();
+
+        $("loading").style.display = "none";
+        $("dashboard").style.display = "block";
+
+      } catch (error) {
+        $("loading").textContent =
+          "Unable to open your account. " +
+          "Please refresh or log in again.";
+      }
+    }
+
+    async function loadAccount() {
+      requireUser();
+
+      $("email").value = currentUser.email || "";
+
+      const { data, error } = await db
+        .from("profiles")
+        .select("full_name")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      const name = data?.full_name ||
+        currentUser.user_metadata?.full_name ||
+        "";
+
+      $("fullName").value = name;
+
+      const firstName = name.trim().split(/\s+/)[0];
+
+      $("welcomeName").textContent = firstName
+        ? "Welcome Back, " + firstName + "! ❄️"
+        : "Welcome to My North Pole! ❄️";
+
+      await Promise.all([
+        loadChildren(),
+        loadAddresses(),
+        loadOrders()
+      ]);
+    }
+
+    // UPDATE PROFILE
+    $("profileForm").addEventListener(
+      "submit",
+      async event => {
+        event.preventDefault();
+
+        try {
+          requireUser();
+
+          const name = $("fullName").value.trim();
+
+          if (!name) {
+            notify("Please enter your name.", "error");
+            return;
+          }
+
+          const { data, error } = await db
+            .from("profiles")
+            .update({ full_name: name })
+            .eq("id", currentUser.id)
+            .select("id");
+
+          if (error) throw error;
+
+          if (!data?.length) {
+            throw new Error(
+              "Profile could not be updated."
+            );
+          }
+
+          $("welcomeName").textContent =
+            "Welcome Back, " +
+            name.split(/\s+/)[0] + "! ❄️";
+
+          notify("Your information has been saved.");
+
+        } catch (error) {
+          notify(error.message, "error");
+        }
+      }
+    );
+
+    // LOAD SAVED CHILD PROFILES
+    async function loadChildren() {
+      requireUser();
+
+      const { data, error } = await db
+        .from("children")
+        .select("id, first_name, age, letter_details")
+        .eq("user_id", currentUser.id)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      const container = $("childrenList");
+      clear(container);
+
+      if (!data.length) {
+        container.appendChild(node(
+          "p",
+          "No saved family profiles yet."
+        ));
+        return;
+      }
+
+      data.forEach(child => {
+        const item = node("div", null, "saved-item");
+
+        item.appendChild(node(
+          "strong",
+          child.first_name
+        ));
+
+        if (child.age !== null) {
+          item.appendChild(node(
+            "p",
+            "Age: " + child.age
+          ));
+        }
+
+        if (child.letter_details) {
+          item.appendChild(node(
+            "p",
+            child.letter_details
+          ));
+        }
+
+        container.appendChild(item);
+      });
+    }
+
+    // SAVE CHILD PROFILE
+    $("childForm").addEventListener(
+      "submit",
+      async event => {
+        event.preventDefault();
+
+        try {
+          requireUser();
+
+          const firstName =
+            $("childName").value.trim();
+
+          const ageValue = $("childAge").value;
+
+          const age = ageValue === ""
+            ? null
+            : Number(ageValue);
+
+          if (!firstName ||
+              (age !== null &&
+               (!Number.isInteger(age) ||
+                age < 0 || age > 17))) {
+            throw new Error(
+              "Please enter a valid name and age."
+            );
+          }
+
+          const { error } = await db
+            .from("children")
+            .insert({
+              user_id: currentUser.id,
+              first_name: firstName,
+              age,
+              letter_details:
+                $("childDetails").value.trim()
+            });
+
+          if (error) throw error;
+
+          $("childForm").reset();
+          await loadChildren();
+
+          notify("Family profile saved!");
+
+        } catch (error) {
+          notify(error.message, "error");
+        }
+      }
+    );
+
+    // LOAD SAVED ADDRESSES
+    async function loadAddresses() {
+      requireUser();
+
+      const { data, error } = await db
+        .from("addresses")
+        .select(
+          "id, recipient_name, street, apartment, " +
+          "city, state, postal_code, country"
+        )
+        .eq("user_id", currentUser.id)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      const container = $("addressList");
+      clear(container);
+
+      if (!data.length) {
+        container.appendChild(node(
+          "p",
+          "No saved mailing addresses yet."
+        ));
+        return;
+      }
+
+      data.forEach(address => {
+        const item = node("div", null, "saved-item");
+
+        item.appendChild(node(
+          "strong",
+          address.recipient_name
+        ));
+
+        const lines = [
+          address.street,
+          address.apartment,
+          [
+            address.city,
+            address.state,
+            address.postal_code
+          ].filter(Boolean).join(", "),
+          address.country
+        ].filter(Boolean);
+
+        lines.forEach(line => {
+          item.appendChild(node("p", line));
+        });
+
+        container.appendChild(item);
+      });
+    }
+
+    // SAVE ADDRESS
+    $("addressForm").addEventListener(
+      "submit",
+      async event => {
+        event.preventDefault();
+
+        try {
+          requireUser();
+
+          const address = {
+            user_id: currentUser.id,
+            recipient_name: $("recipient").value.trim(),
+            street: $("street").value.trim(),
+            apartment: $("apartment").value.trim(),
+            city: $("city").value.trim(),
+            state: $("state").value.trim(),
+            postal_code: $("postal").value.trim(),
+            country: $("country").value.trim()
+          };
+
+          if (!address.recipient_name ||
+              !address.street ||
+              !address.city ||
+              !address.postal_code ||
+              !address.country) {
+            throw new Error(
+              "Please complete the mailing address."
+            );
+          }
+
+          const { error } = await db
+            .from("addresses")
+            .insert(address);
+
+          if (error) throw error;
+
+          $("addressForm").reset();
+          $("country").value = "US";
+
+          await loadAddresses();
+          notify("Mailing address saved!");
+
+        } catch (error) {
+          notify(error.message, "error");
+        }
+      }
+    );
+
+    // LOAD PRIVATE ORDER HISTORY
+    async function loadOrders() {
+      requireUser();
+
+      const { data, error } = await db
+        .from("orders")
+        .select(
+          "id, product_name, amount_cents, " +
+          "currency, payment_status, " +
+          "fulfillment_status, created_at"
+        )
+        .eq("user_id", currentUser.id)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      const container = $("ordersList");
+      clear(container);
+
+      if (!data.length) {
+        container.appendChild(node(
+          "p",
+          "You haven't placed any orders yet. " +
+          "Your Christmas letters will appear here " +
+          "when checkout is connected."
+        ));
+        return;
+      }
+
+      data.forEach(order => {
+        const item = node("div", null, "saved-item");
+
+        item.appendChild(node(
+          "strong",
+          order.product_name
+        ));
+
+        item.appendChild(node(
+          "p",
+          "Order #" + order.id.slice(0, 8)
+        ));
+
+        const date = new Date(
+          order.created_at
+        ).toLocaleDateString();
+
+        item.appendChild(node("p", date));
+
+        const amount = new Intl.NumberFormat(
+          "en-US",
+          {
+            style: "currency",
+            currency: order.currency
+          }
+        ).format(order.amount_cents / 100);
+
+        item.appendChild(node(
+          "p",
+          "Total: " + amount
+        ));
+
+        item.appendChild(node(
+          "span",
+          "Payment: " + order.payment_status,
+          "status " + (
+            order.payment_status === "paid"
+              ? "paid"
+              : ""
+          )
+        ));
+
+        item.appendChild(node("p", ""));
+
+        item.appendChild(node(
+          "span",
+          "Letter: " + order.fulfillment_status,
+          "status " + (
+            order.fulfillment_status === "mailed"
+              ? "mailed"
+              : ""
+          )
+        ));
+
+        container.appendChild(item);
+      });
+    }
+
+    // LOG OUT
+    $("logoutButton").addEventListener(
+      "click",
+      async () => {
+        $("logoutButton").disabled = true;
+
+        const { error } =
+          await db.auth.signOut({ scope: "local" });
+
+        if (error) {
+          $("logoutButton").disabled = false;
+          notify("Unable to log out.", "error");
+          return;
+        }
+
+        currentUser = null;
+        $("dashboard").style.display = "none";
+        window.location.replace("login.html");
+      }
+    );
+
+    // HANDLE SIGNED-OUT SESSIONS
+    db.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        currentUser = null;
+        $("dashboard").style.display = "none";
+        window.location.replace("login.html");
+      }
+    });
+
+    initialize();
+  </script>
+</body>
+</html>
