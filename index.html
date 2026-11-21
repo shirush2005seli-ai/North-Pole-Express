@@ -4,41 +4,61 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
 
   <title>North Pole Express · Christmas Magic</title>
 
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* Login and signup buttons only */
+    /* =========================================
+       NORTH POLE EXPRESS ACCOUNT CONTROLS
+       ========================================= */
+
     .account-buttons {
       position: fixed;
       top: 18px;
       right: 20px;
       z-index: 1000;
+
       display: flex;
       align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
       gap: 10px;
+
+      max-width: calc(100vw - 40px);
     }
 
-    .account-buttons a {
+    .account-buttons a,
+    .account-buttons button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+
       padding: 10px 17px;
+
       border-radius: 25px;
       font-family: inherit;
       font-size: 14px;
       font-weight: 600;
+      line-height: 1.3;
       text-decoration: none;
       white-space: nowrap;
-      transition: transform 0.2s ease;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
     }
 
     .account-login {
       color: #7b263b;
-      background: rgba(255,255,255,0.94);
+      background: rgba(255, 255, 255, 0.94);
       border: 1px solid #d8b6a0;
     }
 
@@ -48,13 +68,68 @@
       border: 1px solid #7b263b;
     }
 
-    .account-buttons a:hover {
+    .account-home {
+      color: #ffffff;
+      background: #7b263b;
+      border: 1px solid #7b263b;
+    }
+
+    .account-logout {
+      color: #7b263b;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid #d8b6a0;
+    }
+
+    .account-buttons a:hover,
+    .account-buttons button:hover {
       transform: translateY(-2px);
     }
 
-    .account-buttons a:focus-visible {
+    .account-buttons a:focus-visible,
+    .account-buttons button:focus-visible {
       outline: 3px solid #d5a14e;
       outline-offset: 3px;
+    }
+
+    .account-buttons button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    /* Prevent account controls from covering
+       the existing grown-ups link. */
+    body > .parent-link {
+      position: fixed;
+      top: 18px;
+      left: 20px;
+      right: auto;
+      z-index: 1000;
+    }
+
+    /* Account state is hidden while loading
+       to avoid showing the wrong buttons. */
+    .account-buttons[hidden],
+    .account-status[hidden] {
+      display: none !important;
+    }
+
+    .account-status {
+      position: fixed;
+      top: 72px;
+      right: 20px;
+      z-index: 1000;
+
+      max-width: 280px;
+      padding: 10px 14px;
+
+      color: #7b263b;
+      background: #fffaf3;
+
+      border: 1px solid #d8b6a0;
+      border-radius: 10px;
+
+      font-size: 13px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     }
 
     @media (max-width: 600px) {
@@ -62,10 +137,24 @@
         top: 12px;
         right: 12px;
         gap: 6px;
+        max-width: calc(100vw - 24px);
       }
 
-      .account-buttons a {
+      .account-buttons a,
+      .account-buttons button {
         padding: 8px 11px;
+        font-size: 12px;
+      }
+
+      body > .parent-link {
+        top: 58px;
+        left: 12px;
+        right: auto;
+      }
+
+      .account-status {
+        top: 100px;
+        right: 12px;
         font-size: 12px;
       }
     }
@@ -74,7 +163,7 @@
 
 <body>
 
-  <!-- Original Christmas snowfall -->
+  <!-- ORIGINAL CHRISTMAS SNOWFALL -->
   <div class="snow" aria-hidden="true">
 
     <span style="--x:7%;--size:12px;--duration:12s;--delay:-0s;--drift:-20px">❄</span>
@@ -114,27 +203,252 @@
 
   </div>
 
-  <!-- Existing grown-ups link -->
+  <!-- ORIGINAL GROWN-UPS LINK -->
   <a class="parent-link" href="#parents">
     Grown-ups only ✧
   </a>
 
-  <!-- New account buttons -->
-  <nav class="account-buttons" aria-label="Account">
-    <a href="login.html" class="account-login">
+  <!-- LOGGED-OUT ACCOUNT BUTTONS -->
+  <nav
+    id="guestNavigation"
+    class="account-buttons"
+    aria-label="Guest account navigation"
+    hidden
+  >
+    <a
+      href="login.html"
+      class="account-login"
+    >
       Log In
     </a>
 
-    <a href="signup.html" class="account-signup">
+    <a
+      href="signup.html"
+      class="account-signup"
+    >
       Sign Up
     </a>
   </nav>
 
-  <!-- Original website -->
+  <!-- LOGGED-IN ACCOUNT BUTTONS -->
+  <nav
+    id="memberNavigation"
+    class="account-buttons"
+    aria-label="Member account navigation"
+    hidden
+  >
+    <a
+      href="#home"
+      class="account-home"
+      id="myChristmasAccount"
+    >
+      My Christmas Account
+    </a>
+
+    <button
+      type="button"
+      class="account-logout"
+      id="logoutButton"
+    >
+      Log Out
+    </button>
+  </nav>
+
+  <div
+    id="accountStatus"
+    class="account-status"
+    role="status"
+    aria-live="polite"
+    hidden
+  ></div>
+
+  <!-- ORIGINAL CHRISTMAS WEBSITE -->
   <main id="app"></main>
 
-  <!-- Original application script -->
+  <!-- SUPABASE AUTHENTICATION LIBRARY -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- ACCOUNT SESSION CONTROLS -->
+  <script>
+    "use strict";
+
+    const SUPABASE_URL =
+      "https://yeubpbvxihqhodwspuav.supabase.co";
+
+    // Public publishable key only.
+    // Never insert a service-role or secret key.
+    const SUPABASE_KEY =
+      "sb_publishable_JcAJkEMletFG5TGXA8ny3Q_cIW2qrrp";
+
+    const guestNavigation =
+      document.getElementById("guestNavigation");
+
+    const memberNavigation =
+      document.getElementById("memberNavigation");
+
+    const logoutButton =
+      document.getElementById("logoutButton");
+
+    const accountStatus =
+      document.getElementById("accountStatus");
+
+    let northPoleAuth = null;
+
+    function showAccountStatus(message) {
+      accountStatus.textContent = message;
+      accountStatus.hidden = false;
+    }
+
+    function clearAccountStatus() {
+      accountStatus.textContent = "";
+      accountStatus.hidden = true;
+    }
+
+    function displayGuestNavigation() {
+      guestNavigation.hidden = false;
+      memberNavigation.hidden = true;
+    }
+
+    function displayMemberNavigation() {
+      guestNavigation.hidden = true;
+      memberNavigation.hidden = false;
+    }
+
+    function notifyChristmasApp(user) {
+      // app.js can listen for this event
+      // to load the customer's private letter
+      // and wishlist into the existing website.
+      window.dispatchEvent(
+        new CustomEvent("northpole:auth-ready", {
+          detail: {
+            user: user
+          }
+        })
+      );
+    }
+
+    async function checkAccountSession() {
+      if (!northPoleAuth) return;
+
+      try {
+        const { data, error } =
+          await northPoleAuth.auth.getUser();
+
+        if (error) throw error;
+
+        const user = data?.user || null;
+
+        if (user) {
+          displayMemberNavigation();
+        } else {
+          displayGuestNavigation();
+        }
+
+        clearAccountStatus();
+        notifyChristmasApp(user);
+
+      } catch (error) {
+        // Do not expose private member controls
+        // while authentication is uncertain.
+        guestNavigation.hidden = true;
+        memberNavigation.hidden = true;
+
+        showAccountStatus(
+          "We couldn't verify your account. " +
+          "Please refresh the page."
+        );
+      }
+    }
+
+    if (window.supabase) {
+      northPoleAuth = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+      // Make the client accessible to app.js
+      // without creating a second auth client.
+      window.northPoleSupabase = northPoleAuth;
+
+      northPoleAuth.auth.onAuthStateChange(
+        (event) => {
+          if (
+            event === "SIGNED_IN" ||
+            event === "SIGNED_OUT" ||
+            event === "USER_UPDATED"
+          ) {
+            // Verify the current account
+            // after the auth callback completes.
+            Promise.resolve().then(() => {
+              checkAccountSession();
+            });
+          }
+        }
+      );
+
+    } else {
+      showAccountStatus(
+        "Account service is unavailable. " +
+        "Please refresh the page."
+      );
+    }
+
+    logoutButton.addEventListener(
+      "click",
+      async () => {
+        if (!northPoleAuth) return;
+
+        logoutButton.disabled = true;
+        logoutButton.textContent = "Logging Out...";
+
+        try {
+          const { error } =
+            await northPoleAuth.auth.signOut({
+              scope: "local"
+            });
+
+          if (error) throw error;
+
+          displayGuestNavigation();
+
+          // Clear any customer-specific information
+          // in app.js when the user signs out.
+          notifyChristmasApp(null);
+
+          window.location.replace("index.html");
+
+        } catch (error) {
+          showAccountStatus(
+            "Unable to log out. Please try again."
+          );
+
+          logoutButton.disabled = false;
+          logoutButton.textContent = "Log Out";
+        }
+      }
+    );
+
+    document.getElementById("myChristmasAccount")
+      .addEventListener("click", function(event) {
+        event.preventDefault();
+
+        // Keeps customers on the same homepage.
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      });
+  </script>
+
+  <!-- ORIGINAL WEBSITE APPLICATION -->
   <script src="app.js"></script>
+
+  <!-- VERIFY SESSION AFTER THE APP IS LOADED -->
+  <script>
+    if (northPoleAuth) {
+      checkAccountSession();
+    }
+  </script>
 
 </body>
 </html>
