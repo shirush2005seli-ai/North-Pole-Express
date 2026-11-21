@@ -1,0 +1,494 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+
+  <title>Sign Up | North Pole Express</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+      color: #493329;
+      background:
+        radial-gradient(
+          circle at 50% 5%,
+          #ffffff 0%,
+          #f7ebdf 55%,
+          #ead7c4 100%
+        );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 70px 20px 40px;
+    }
+
+    .back-home {
+      position: absolute;
+      top: 24px;
+      left: 25px;
+      color: #7b263b;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .signup-card {
+      width: 100%;
+      max-width: 460px;
+      padding: 43px 36px;
+      background: rgba(255, 253, 248, 0.97);
+      border: 1px solid #d9baa0;
+      border-radius: 22px;
+      box-shadow:
+        0 18px 55px rgba(76, 42, 27, 0.12);
+      text-align: center;
+    }
+
+    .ornament {
+      font-size: 38px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      color: #7b263b;
+      font-size: 30px;
+      margin: 0 0 10px;
+      font-weight: normal;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #806c5c;
+      margin-bottom: 28px;
+    }
+
+    form {
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 19px;
+      border: 1px solid #dbc7b4;
+      border-radius: 10px;
+      background: #fffefa;
+      color: #493329;
+      font-size: 15px;
+      font-family: Arial, sans-serif;
+    }
+
+    input:focus {
+      outline: 2px solid #b58a63;
+      outline-offset: 1px;
+    }
+
+    .password-hint {
+      font-size: 12px;
+      color: #806c5c;
+      margin: -10px 0 17px;
+      line-height: 1.5;
+    }
+
+    .main-button {
+      width: 100%;
+      padding: 15px;
+      color: white;
+      background: #7b263b;
+      border: 0;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .main-button:hover {
+      background: #5c192a;
+    }
+
+    .main-button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .footer-links {
+      margin-top: 25px;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    a {
+      color: #7b263b;
+    }
+
+    .message {
+      margin: 15px 0;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .message.error {
+      display: block;
+      background: #fce8e8;
+      color: #9b2634;
+    }
+
+    .message.success {
+      display: block;
+      background: #e9f3e9;
+      color: #315a39;
+    }
+
+    .success-panel {
+      display: none;
+      text-align: center;
+      padding: 15px 0;
+    }
+
+    .success-panel h2 {
+      color: #7b263b;
+      font-weight: normal;
+    }
+
+    .success-panel p {
+      line-height: 1.7;
+      color: #806c5c;
+    }
+
+    .success-panel a {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 13px 24px;
+      background: #7b263b;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+    }
+
+    .divider {
+      margin: 25px 0;
+      color: #b69a7d;
+      font-size: 18px;
+    }
+
+    @media (max-width: 480px) {
+      .signup-card {
+        padding: 32px 22px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="index.html" class="back-home">
+    ← Back to the North Pole
+  </a>
+
+  <main class="signup-card">
+
+    <div class="ornament" aria-hidden="true">
+      🎄
+    </div>
+
+    <h1>Join the Christmas Magic</h1>
+
+    <p class="subtitle">
+      Create your very own North Pole account.
+      <br>
+      A little Christmas magic awaits your family.
+    </p>
+
+    <div id="message"
+         class="message"
+         role="status"
+         aria-live="polite"></div>
+
+    <!-- CUSTOMER REGISTRATION FORM -->
+    <form id="signupForm">
+
+      <label for="fullName">Full Name</label>
+
+      <input
+        type="text"
+        id="fullName"
+        placeholder="Your full name"
+        autocomplete="name"
+        maxlength="120"
+        required
+      >
+
+      <label for="email">Email Address</label>
+
+      <input
+        type="email"
+        id="email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        required
+      >
+
+      <label for="password">Create Password</label>
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Create a secure password"
+        autocomplete="new-password"
+        minlength="12"
+        required
+      >
+
+      <p class="password-hint">
+        Use at least 12 characters.
+        A longer, unique password is recommended.
+      </p>
+
+      <label for="confirmPassword">
+        Confirm Password
+      </label>
+
+      <input
+        type="password"
+        id="confirmPassword"
+        placeholder="Re-enter your password"
+        autocomplete="new-password"
+        minlength="12"
+        required
+      >
+
+      <button
+        type="submit"
+        class="main-button"
+        id="signupButton">
+        Create My Account
+      </button>
+
+    </form>
+
+    <!-- SUCCESS MESSAGE -->
+    <section id="successPanel"
+             class="success-panel"
+             aria-live="polite">
+
+      <div style="font-size:44px"
+           aria-hidden="true">
+        💌
+      </div>
+
+      <h2>Welcome to the North Pole!</h2>
+
+      <p id="successText">
+        Please check your inbox for a
+        confirmation email.
+        <br>
+        Follow the link to verify your account.
+      </p>
+
+      <a href="login.html">
+        Continue to Log In
+      </a>
+
+    </section>
+
+    <div class="footer-links" id="loginFooter">
+      Already part of our Christmas family?
+      <br>
+
+      <a href="login.html">
+        Log In to Your Account
+      </a>
+    </div>
+
+    <div class="divider" aria-hidden="true">
+      ✧ ❄ ✧
+    </div>
+
+    <small>
+      Creating Christmas memories,
+      one magical letter at a time.
+      <br>
+      North Pole Express
+    </small>
+
+  </main>
+
+  <!-- Supabase browser SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    "use strict";
+
+    // Public Supabase configuration.
+    // Never place secret/service-role keys here.
+    const SUPABASE_URL =
+      "https://yeubpbvxihqhodwspuav.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_JcAJkEMletFG5TGXA8ny3Q_cIW2qrrp";
+
+    const signupForm =
+      document.getElementById("signupForm");
+
+    const signupButton =
+      document.getElementById("signupButton");
+
+    const message =
+      document.getElementById("message");
+
+    const successPanel =
+      document.getElementById("successPanel");
+
+    const loginFooter =
+      document.getElementById("loginFooter");
+
+    function showMessage(text, type = "error") {
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    function clearMessage() {
+      message.textContent = "";
+      message.className = "message";
+    }
+
+    function setLoading(loading) {
+      signupButton.disabled = loading;
+
+      signupButton.textContent = loading
+        ? "Creating Your Account..."
+        : "Create My Account";
+    }
+
+    signupForm.addEventListener(
+      "submit",
+      async function(event) {
+        event.preventDefault();
+        clearMessage();
+
+        const fullName =
+          document.getElementById("fullName")
+            .value.trim();
+
+        const email =
+          document.getElementById("email")
+            .value.trim();
+
+        const password =
+          document.getElementById("password").value;
+
+        const confirmPassword =
+          document.getElementById("confirmPassword")
+            .value;
+
+        if (!fullName) {
+          showMessage("Please enter your name.");
+          return;
+        }
+
+        if (password.length < 12) {
+          showMessage(
+            "Your password must contain at least " +
+            "12 characters."
+          );
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showMessage(
+            "Your passwords do not match. " +
+            "Please try again."
+          );
+          return;
+        }
+
+        if (!window.supabase) {
+          showMessage(
+            "The registration service is unavailable. " +
+            "Please try again later."
+          );
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          const db = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+          );
+
+          const { data, error } =
+            await db.auth.signUp({
+              email: email,
+              password: password,
+              options: {
+                data: {
+                  full_name: fullName
+                },
+                emailRedirectTo:
+                  window.location.origin +
+                  "/login.html"
+              }
+            });
+
+          if (error) throw error;
+
+          // With email confirmation enabled,
+          // the customer must verify their email.
+          if (data.session) {
+            // Defensive handling if confirmation
+            // was disabled in Supabase.
+            await db.auth.signOut();
+
+            document.getElementById("successText")
+              .textContent =
+                "Your account has been created. " +
+                "You can now log in.";
+          }
+
+          signupForm.style.display = "none";
+          loginFooter.style.display = "none";
+          successPanel.style.display = "block";
+
+          clearMessage();
+
+        } catch (error) {
+          showMessage(
+            error.message ||
+            "We could not create your account. " +
+            "Please try again."
+          );
+        } finally {
+          setLoading(false);
+        }
+      }
+    );
+  </script>
+
+</body>
+</html>
