@@ -1,14 +1,1558 @@
-const app=document.querySelector('#app');const state={child:'',wishes:'',proud:'',more:'',gifts:[],filter:'All',parent:{}};const gifts=[{id:'lego',name:'LEGO Classic Brick Box',icon:'🧱',category:'Build',description:'Build a world from your imagination.',query:'LEGO Classic Medium Creative Brick Box 10696',target:'https://www.target.com/p/-/A-16747750'},{id:'cars',name:'Hot Wheels 5-Pack',icon:'🏎️',category:'Adventure',description:'Tiny wheels. Big racing adventures.',query:'Hot Wheels 5 pack cars',target:'https://www.target.com/p/-/A-14783201'},{id:'art',name:'Crayola Art Case',icon:'🎨',category:'Create',description:'Turn big ideas into colorful pictures.',query:'Crayola Inspiration Art Case',target:'https://www.target.com/s/crayola%2Binspiration%2Bart%2Bcase'},{id:'dough',name:'Play-Doh Fun Factory',icon:'🌈',category:'Create',description:'Squish, shape, and make something wonderful.',query:'Play-Doh Fun Factory',target:'https://www.target.com/s/playdoh%2Bfactory'},{id:'bear',name:'A cuddly teddy bear',icon:'🧸',category:'Cozy',description:'A soft new friend for cozy adventures.',query:'teddy bear plush toy'},{id:'rocket',name:'A space adventure set',icon:'🚀',category:'Adventure',description:'Dream up a journey to the stars.',query:'kids space rocket toy set'}];
-gifts.push(...[{"id":"puppy","name":"A puppy","icon":"🐶","category":"Friends","description":"A four-legged friend to love and care for.","query":null},{"id":"bike","name":"A bicycle","icon":"🚲","category":"Outdoor","description":"Pedal toward a whole new adventure.","query":"kids bicycle"},{"id":"skates","name":"Rollerblades","icon":"🛼","category":"Outdoor","description":"Glide, roll, and learn new moves.","query":"kids inline skates"},{"id":"scooter","name":"A kick scooter","icon":"🛴","category":"Outdoor","description":"Scoot along on your next adventure.","query":"kids kick scooter"},{"id":"skateboard","name":"A skateboard","icon":"🛹","category":"Outdoor","description":"Dream up your next great ride.","query":"kids beginner skateboard"},{"id":"soccer","name":"A soccer ball","icon":"⚽","category":"Outdoor","description":"Kick off a game with your friends.","query":"kids soccer ball"},{"id":"basketball","name":"A basketball","icon":"🏀","category":"Outdoor","description":"Bounce into a new favorite game.","query":"kids basketball"},{"id":"doll","name":"A baby doll","icon":"👶","category":"Play","description":"A little friend for big pretend adventures.","query":"baby doll toy"},{"id":"dollhouse","name":"A dollhouse","icon":"🏠","category":"Play","description":"Create tiny rooms and enormous stories.","query":"kids dollhouse"},{"id":"kitchen","name":"A play kitchen","icon":"🍳","category":"Play","description":"Cook up a pretend Christmas feast.","query":"kids play kitchen"},{"id":"train","name":"A toy train set","icon":"🚂","category":"Build","description":"Build the tracks for your very own express.","query":"kids toy train set"},{"id":"tiles","name":"Magnetic building tiles","icon":"🔷","category":"Build","description":"Stack bright shapes into amazing creations.","query":"magnetic building tiles kids"},{"id":"puzzle","name":"A jigsaw puzzle","icon":"🧩","category":"Build","description":"Piece together a picture one discovery at a time.","query":"kids jigsaw puzzle"},{"id":"dinosaur","name":"Dinosaur toys","icon":"🦕","category":"Adventure","description":"Roam a prehistoric world of your own.","query":"kids dinosaur toy set"},{"id":"remote","name":"A remote-control car","icon":"🚙","category":"Adventure","description":"Take the controls and race into adventure.","query":"kids remote control car"},{"id":"superhero","name":"Superhero figures","icon":"🦸","category":"Play","description":"Tell stories full of courage and kindness.","query":"kids superhero action figures"},{"id":"costume","name":"Dress-up costumes","icon":"👑","category":"Play","description":"Become a character from your imagination.","query":"kids dress up costumes"},{"id":"science","name":"A science experiment kit","icon":"🧪","category":"Discover","description":"Ask big questions and make little discoveries.","query":"kids science experiment kit"},{"id":"telescope","name":"A telescope","icon":"🔭","category":"Discover","description":"Look up and wonder about the night sky.","query":"kids telescope"},{"id":"books","name":"A collection of storybooks","icon":"📚","category":"Cozy","description":"Open the door to a whole new story.","query":"children storybook collection"},{"id":"tent","name":"An indoor play tent","icon":"⛺","category":"Cozy","description":"Make a cozy hideaway for make-believe.","query":"kids indoor play tent"},{"id":"music","name":"A musical keyboard","icon":"🎹","category":"Create","description":"Make up a tune that is all your own.","query":"kids musical keyboard"},{"id":"craft","name":"A jewelry craft kit","icon":"📿","category":"Create","description":"String together something bright and beautiful.","query":"kids jewelry making craft kit"},{"id":"game","name":"A family board game","icon":"🎲","category":"Play","description":"Bring everyone together for a little fun.","query":"kids family board game"}]);
 
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const chosen=()=>gifts.filter(g=>state.gifts.includes(g.id));const go=r=>location.hash=r;function shell(kicker,title,sub,body){return `<section class="scene"><a href="#home" class="back">← Back to the snowy village</a><div class="heading"><small>${kicker}</small><h1>${title}</h1><p>${sub}</p></div>${body}</section>`}function home(){app.innerHTML=`<section class="world" aria-label="Snowy North Pole village with Santa, an elf, and the North Pole Express train">${[['home','home','Home'],['write','write','Write to Santa'],['gifts','gifts','Toy workshop'],['reply','reply','Santa’s reply'],['journey','journey','Ride the Express'],['main-write','write','Start your Santa letter']].map(([cls,route,name])=>`<a href="#${route}" class="hotspot ${cls}"><span>${name}</span></a>`).join('')}<a class="village-nav-cover adults-tab" href="#parents">Adults</a><nav class="village-steps" aria-label="Your Christmas adventure"><a href="#write"><span>✉</span><b>1. Write<br>Your Letter</b></a><a href="#journey"><span>🚂</span><b>2. Ride the<br>North Pole Express</b></a><a href="#gifts"><span>🎁</span><b>3. Choose<br>Your Wishes</b></a><a href="#reply"><span>✉</span><b>4. Receive a<br>Letter from Santa</b></a></nav></section><section class="enchanted-sky" aria-label="Santa and his reindeer flying over an enchanted snowy village"><div class="sky-glow" aria-hidden="true"></div><div class="magic-stars" aria-hidden="true"><i style="--sx:8%;--sy:9%;--delay:0s">✧</i><i style="--sx:39%;--sy:26%;--delay:1s">✧</i><i style="--sx:70%;--sy:43%;--delay:2s">✧</i><i style="--sx:1%;--sy:60%;--delay:3s">✧</i><i style="--sx:32%;--sy:19%;--delay:4s">✧</i><i style="--sx:63%;--sy:36%;--delay:0s">✧</i><i style="--sx:94%;--sy:53%;--delay:1s">✧</i><i style="--sx:25%;--sy:12%;--delay:2s">✧</i><i style="--sx:56%;--sy:29%;--delay:3s">✧</i><i style="--sx:87%;--sy:46%;--delay:4s">✧</i><i style="--sx:18%;--sy:63%;--delay:0s">✧</i><i style="--sx:49%;--sy:22%;--delay:1s">✧</i><i style="--sx:80%;--sy:39%;--delay:2s">✧</i><i style="--sx:11%;--sy:56%;--delay:3s">✧</i><i style="--sx:42%;--sy:15%;--delay:4s">✧</i></div><div class="sleigh-flight"><button class="flying-sleigh" id="sparkleSleigh" aria-label="Send Christmas sparkles across the village"><img src="flying-reindeer.png" alt="Santa’s red-and-gold sleigh pulled by three flying reindeer" draggable="false"></button></div><div class="sky-caption"><span id="skyMessage" role="status">A little Christmas magic, on its way to you ✧</span><button id="pauseFlight" aria-pressed="false">Pause flight</button></div></section><section class="welcome"><h1 class="mobile-heading">Welcome to the North Pole!</h1><p>A little letter is the start of something magical.</p><div class="actions"><button data-go="write">✉ Write to Santa</button><button class="gold" data-go="gifts">🎁 Explore the toy workshop</button></div></section>`}
-function write(){app.innerHTML=shell('SANTA’S COZY MAILROOM','Your very own letter to Santa.','Take your time. There is room for every little story and big Christmas wish.',`<div class="letter-desk"><article class="santa-stationery"><div class="stationery-header"><span>NORTH POLE EXPRESS<br><small>CHRISTMAS CORRESPONDENCE</small></span><div class="letter-postage" aria-label="Decorative North Pole snowflake stamp"><span>❄</span><b>NORTH POLE</b><small>SPECIAL DELIVERY</small></div></div><div class="postmark" aria-hidden="true">SANTA’S MAILROOM<br>✧ CHRISTMAS MAGIC ✧</div><h2>Dear Santa,</h2><form id="letter"><label>My first name is…<input name="child" required maxlength="50" autocomplete="off" placeholder="What should Santa call you?" value="${esc(state.child)}"></label><label>This Christmas, I’m wishing for…<textarea name="wishes" rows="4" maxlength="2000" placeholder="Tell Santa about your Christmas wishes…">${esc(state.wishes)}</textarea></label><label>Something kind I did or learned this year…<textarea name="proud" rows="3" maxlength="1500" placeholder="A little story you’d like Santa to hear…">${esc(state.proud)}</textarea></label><label>What else would you love Santa to know?<span class="letter-prompt">Tell him about your favorite things, a special memory, a big dream, or a question you’ve always wanted to ask. Write as much as you like.</span><textarea name="more" rows="8" maxlength="6000" placeholder="Dear Santa, there’s something else I wanted to tell you…">${esc(state.more)}</textarea></label>${chosen().length?'<div class="stationery-wishes"><b>Wishes tucked into my letter</b>'+chosen().map(g=>`<p>${g.icon} ${g.name}</p>`).join('')+'</div>':''}<div class="letter-signoff">With love,<br><span>${esc(state.child||'Your little believer')}</span></div><div class="actions"><button class="gold" type="submit" name="next" value="gifts">Add wishes from the workshop →</button><button type="submit" name="next" value="journey">Seal my letter ✉</button></div><p id="letterError" role="status"></p></form><div class="stationery-footer">✧ A LITTLE LETTER. A LITTLE CHRISTMAS MAGIC. ✧</div></article></div>`);const form=document.querySelector('#letter');form.oninput=()=>{for(const key of ['child','wishes','proud','more'])state[key]=form.elements[key].value;};form.onsubmit=e=>{e.preventDefault();const data=new FormData(e.currentTarget);for(const key of ['child','wishes','proud','more'])state[key]=String(data.get(key)||'').trim();if(!state.child){document.querySelector('#letterError').textContent='Tell Santa your first name.';return}const next=e.submitter.value;if(next==='journey'&&!state.wishes&&!state.more&&!state.gifts.length){document.querySelector('#letterError').textContent='Write Santa a little message or add a wish first.';return}go(next)}}
+/* =========================================================
+   NORTH POLE EXPRESS — COMPLETE APP.JS
+   Christmas Website + Private Customer Drafts
+   ========================================================= */
 
-function catalog(){app.innerHTML=shell('THE ELVES’ TOY WORKSHOP','What makes your eyes sparkle?','Wander through the toy shelves. Tap a wish to tuck it into your letter.',`<div class="filters">${['All','Build','Create','Adventure','Outdoor','Play','Cozy','Discover','Friends'].map(c=>`<button class="${c===state.filter?'active':''}" data-filter="${c}">${c}</button>`).join('')}</div><div class="gift-grid">${gifts.filter(g=>state.filter==='All'||state.filter===g.category).map(g=>`<article class="gift ${state.gifts.includes(g.id)?'selected':''}"><div class="toy" aria-label="Illustration of ${g.name}" role="img">${g.icon}</div><small>${g.category.toUpperCase()} · WISH IDEA</small><h2>${g.name}</h2><p>${g.description}</p><button data-gift="${g.id}" aria-pressed="${state.gifts.includes(g.id)}">${state.gifts.includes(g.id)?'✓ In my letter · remove':'✧ Add to my wishes'}</button></article>`).join('')}</div><div class="basket" role="status">✉ ${state.gifts.length} ${state.gifts.length===1?'wish':'wishes'} tucked into your letter<br><a href="#write">${state.child?'Back to my letter':'Tell Santa my name'} →</a>${state.child?' &nbsp; · &nbsp; <a href="#journey">All aboard →</a>':''}</div>`);document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{state.filter=b.dataset.filter;catalog()});document.querySelectorAll('[data-gift]').forEach(b=>b.onclick=()=>{const y=window.scrollY;const id=b.dataset.gift;state.gifts=state.gifts.includes(id)?state.gifts.filter(x=>x!==id):[...state.gifts,id];catalog();window.scrollTo(0,y);document.querySelector(`[data-gift="${id}"]`).focus({preventScroll:true})})}
-function journey(){if(!state.child||(!state.wishes&&!state.more&&!state.gifts.length)){app.innerHTML=shell('NORTH POLE EXPRESS','A little letter is your ticket.','Tell Santa your name and write him a wish or a story.',`<div class="paper narrow center"><h2>The elves have saved you a seat.</h2><button data-go="write">Write my letter ✉</button></div>`);return}app.innerHTML=shell('SPECIAL NORTH POLE DELIVERY',`${esc(state.child)}’s letter takes flight.`,'A little Christmas imagination, all the way to the elves’ mailroom.',`<section class="letter-journey" aria-label="An animated letter traveling through a snowy forest to the North Pole elves"><div class="journey-vignette"></div><div class="journey-glints" aria-hidden="true">✦ &nbsp; ✧ &nbsp; ✦ &nbsp; ✧</div><div class="letter-flight"><div class="travel-envelope"><div class="envelope-flap"></div><div class="envelope-front"><small>TO SANTA CLAUS</small><b>The North Pole</b><span class="travel-stamp">❄</span></div><div class="wax-seal">S</div></div><span class="letter-dust" aria-hidden="true">✧ · ✦ · ✧</span></div><div class="mailroom-glow" aria-hidden="true"></div><div class="journey-caption"><span id="journeyStatus" role="status">Sealed with a little Christmas sparkle…</span><div><button id="pauseJourney" aria-pressed="false">Pause</button><button id="replayJourney">Replay journey ↻</button></div></div></section><div class="journey-next"><div><span>✧ SPECIAL DELIVERY ✧</span><h2>Next stop: Santa’s mailroom.</h2></div><div class="actions"><button class="gold" data-go="parents">Mail to Santa ✉</button><button data-go="write">Read my letter</button></div></div>`)}
+const app = document.querySelector("#app");
 
-function links(g){if(g.id==='puppy')return `<p>A family wish to discuss together. Your letter shares the dream; a pet is a family decision, and isn’t included in this package.</p>`;return `<div class="shop-links"><a href="https://www.walmart.com/search?q=${encodeURIComponent(g.query)}" target="_blank" rel="noopener noreferrer">Find at Walmart ↗</a><a class="target" href="${g.target||'https://www.target.com/s?searchTerm='+encodeURIComponent(g.query)}" target="_blank" rel="noopener noreferrer">${g.target?.includes('/p/')?'View at Target':'Find at Target'} ↗</a></div>`}function field(name,label,extra=''){return `<label>${label}<input name="${name}" ${extra} value="${esc(state.parent[name]||(name==='recipient'?state.child:''))}"></label>`}function parents(){app.innerHTML=shell('FOR GROWN-UPS','A little magic, delivered.','A keepsake for your child. A copy of their wishes for you.',`<div class="parent-grid"><div><article class="paper package-summary"><h2>The first Santa package</h2><div class="package-price">$13.99<small>One child · one special delivery</small></div><ul class="included"><li><span>✉</span><div><b>An email for you</b><p>A copy of exactly what your child wrote, with their chosen wishes and shopping links.</p></div></li><li><span>✧</span><div><b>A certificate in the mail</b><p>A named Certificate of Christmas Magic, ready to become a keepsake.</p></div></li><li><span>❄</span><div><b>A personalized Santa letter</b><p>A reply inspired by your child’s own words, mailed together with their certificate.</p></div></li></ul><p class="simple-note">Your email and the mailing request are sent after payment is confirmed.</p></article><article class="paper shopping"><h2>Keep the letters going</h2><div class="package-price repeat-price">$7<small>Each additional personalized mailed reply</small></div><p>Once your child has received their first package, they can write to Santa again—and again. Each new reply is a separate $7 purchase. No subscription.</p><p>After your original order and follow-up payment are verified, you receive the mailing address and instructions. Post your child’s next letter, and Santa sends a detailed personal reply in the mail.</p><p class="simple-note">You provide postage for the letter you send. The $7 covers one personalized reply mailed back to your child.</p><button class="gold" data-go="followup">Arrange another Santa reply →</button></article><details class="paper shopping review-details"><summary>Review your child’s letter & wishes</summary>${state.child?`<div class="list">Dear Santa,<br><br>${esc(state.wishes||'My wishes are on the toy shelf below.')}<br><br>${state.proud?'Something I’m proud of: '+esc(state.proud)+'<br><br>':''}${state.more?esc(state.more)+'<br><br>':''}With love, ${esc(state.child)}</div>`:'<p>No letter yet. <a href="#write">Start the adventure</a>.</p>'}${chosen().map(g=>`<article class="shop-item"><h3>${g.icon} ${g.name}</h3>${links(g)}</article>`).join('')}</details></div><article class="paper"><h2>Where should the magic go?</h2><form id="parentForm">${field('name','Your name','required maxlength="100" autocomplete="name"')}${field('email','Your email','required type="email" autocomplete="email"')}${field('recipient','Child’s full name','required maxlength="100"')}${field('address','Mailing address','required maxlength="200" autocomplete="street-address"')}<div class="two">${field('city','City','required maxlength="100"')}${field('region','State / region','maxlength="100"')}${field('postal','Postal code','required maxlength="30"')}${field('country','Country','required maxlength="100"')}</div><label class="checkbox"><input type="checkbox" required> I am the parent or guardian and agree to the $13.99 package.</label><button class="paypal" type="button" disabled>PayPal · $13.99 · Coming soon</button><p class="simple-note">Checkout opens once payment and delivery setup is complete.</p></form></article></div>`);document.querySelector('#parentForm').oninput=e=>state.parent=Object.fromEntries(new FormData(e.currentTarget));document.querySelector('#parentForm').onsubmit=e=>e.preventDefault()}
-function followup(){app.innerHTML=shell('FOR RETURNING FAMILIES','Another letter. More North Pole magic.','Keep the conversation going, one letter at a time.',`<article class="paper narrow"><h2>A personal reply from Santa</h2><div class="package-price">$7<small>One new reply, sent by post</small></div><ol class="reply-instructions"><li>Have your original $13.99 order number ready.</li><li>Purchase one $7 reply. We verify the original order and your new payment.</li><li>Receive the mailing address and posting instructions privately.</li><li>Mail your child’s letter with your order reference and your own postage.</li><li>Receive a detailed, personalized reply from Santa in the mail.</li></ol><p>Repeat whenever your child wants to write again. Each reply costs $7; there is no subscription.</p><form id="followupForm"><label>Original order number<input name="originalOrder" required maxlength="100" autocomplete="off"></label><label>Parent’s email<input name="email" type="email" required autocomplete="email" value="${esc(state.parent.email||'')}"></label><button class="paypal" type="button" disabled>PayPal · $7 · Coming soon</button></form><div class="address-locked"><span>🔒</span><div><b>Mailing address shared after payment</b><p>Available only after your original order and the new $7 payment have been verified.</p></div></div><p class="simple-note">Checkout is not open yet. No mailing address is stored in this public page.</p><p class="center"><a href="#parents">← Back to the first Santa package</a></p></article>`);document.querySelector('#followupForm').onsubmit=e=>e.preventDefault()}
+const state = {
+  child: "",
+  wishes: "",
+  proud: "",
+  more: "",
+  gifts: [],
+  filter: "All",
+  parent: {}
+};
 
-function reply(){app.innerHTML=shell('AN OFFICIAL MESSAGE FROM SANTA','Your place on the Nice List.','Personally approved at the North Pole · Christmas 2026',`<article class="paper santa-certificate" aria-labelledby="certificate-title">
-<header class="certificate-header"><p class="certificate-express">NORTH POLE EXPRESS</p><p class="certificate-office">THE OFFICE OF SANTA CLAUS</p><p>North Pole Christmas Registry · Christmas 2026</p><div class="certificate-rule" aria-hidden="true">✧</div><h2 id="certificate-title">Certificate of Good Conduct<br>&amp; Official Christmas Confirmation</h2><p>Issued with the personal approval of Santa Claus</p><p>This certificate is proudly presented to</p><div class="sample-name">${esc(state.child||'Your little believer')}</div><p>In recognition of your kindness, your efforts, and the wonderful person you have continued to become throughout the year.</p></header><div class="certificate-letter"><p>Dear ${esc(state.child||'Your little believer')},</p><p>It is my great pleasure to send you this official certificate from my office at the North Pole. The Christmas preparations are well underway, the workshop is full of activity, and I have been looking forward to putting pen to paper to share some very special news with you.</p><p>I have personally reviewed this year’s Christmas Register, and I am delighted to confirm that your name has been entered on my Nice List for Christmas 2026.</p><p>Please consider this your official confirmation, signed by me and recorded here at the North Pole: you have been good throughout the year, your efforts have been recognised, and a magical Christmas is being prepared for you.</p><section><h3>A PERSONAL COMMENDATION FROM SANTA</h3><p>Being good is about the choices you make as you grow. It is there when you try to be kind, when you listen, when you share, and when you help someone who needs you. It is there when you say thank you, when you tell the truth, and when you find the courage to say you are sorry.</p><p>Sometimes the smallest acts of kindness deserve the greatest recognition. Making room for someone else, being gentle, offering a helping hand, or trying again after a difficult moment can make a bigger difference than you realise.</p><p>Those are the sorts of things I value very much.</p><p>Nobody gets everything right every day, ${esc(state.child||'Your little believer')}. Even here at the North Pole, we have muddled instructions, dropped parcels, and the occasional disagreement over whose turn it is to tidy the ribbon cupboard. What matters is learning, making things right when you can, and continuing to do your best.</p><p>You have plenty to be proud of this year. I hope that, when you look at this certificate, you remember that your kindness matters and that your efforts count.</p></section><section><h3>CONFIRMATION FROM THE NORTH POLE</h3><p>By the authority of my office, I hereby confirm the following entry in the Christmas Register:</p><dl class="certificate-register"><div><dt>Name</dt><dd>${esc(state.child||'Your little believer')}</dd></div><div><dt>Christmas year</dt><dd>2026</dd></div><div><dt>Nice List standing</dt><dd>Confirmed</dd></div><div><dt>Recognition</dt><dd>Kindness, good conduct, and continued effort</dd></div><div><dt>Christmas arrangements</dt><dd>Approved by Santa Claus</dd></div><div><dt>Special delivery</dt><dd>Presents and Christmas surprises being prepared</dd></div></dl><p>Your name has been included in our Christmas Eve preparations. The workshop teams have their instructions, the wrapping benches are busy, and the sleigh preparations are moving along splendidly.</p><p>There are presents being prepared for you, ${esc(state.child||'Your little believer')}, and I am looking forward to bringing them on my Christmas Eve journey.</p><p>Some details must remain a secret until Christmas morning. The elves take great pride in a well-kept surprise, and I would hate to spoil their work by revealing too much in a letter. You may, however, be quite certain that you have been remembered here at the North Pole.</p></section><section><h3>NEWS FROM MY WORKSHOP</h3><p>You would enjoy seeing the workshop at this time of year. There are wooden drawers filled with gift tags, shelves of brightly coloured paper, and long tables where the elves carefully finish and check the Christmas parcels.</p><p>Each present passes through several pairs of hands before it is ready for the sleigh. The makers check their work, the wrapping team folds every corner, and the delivery team makes certain that each label is clear and securely attached.</p><p>On my desk, beside the Christmas Register, I keep the letters and wishes that help make this season so special. Thank you for sharing yours with me. I have read them with care.</p><p>Although I must choose what can travel in the sleigh, your wishes are an important part of my preparations. So are the happy surprises that you may never have thought to ask for.</p><p>Beyond the workshop, the reindeer are getting ready too. Their harnesses are being checked, their bells are being polished, and they are enjoying plenty of rest before our long journey. I shall be checking the sleigh myself before we leave, as I do every Christmas Eve.</p><p>There is a great deal to arrange, but I always make time for certificates like yours. A child should know when there is something worth celebrating, and your place on this year’s Nice List is certainly worth celebrating.</p></section><section><h3>MY CHRISTMAS PROMISE TO YOU</h3><p>This Christmas, you can look forward to presents, surprises, and the excitement of discovering what Christmas morning has brought.</p><p>My wish is that you also enjoy everything around those moments: the anticipation before bedtime, the familiar decorations, the laughter, and the pleasure of sharing a special day with the people who care about you.</p><p>You do not need to have a perfect Christmas for it to be a magical one. Sometimes the memories that stay with us come from the simplest things—a kind word, a favourite story, a shared joke, or the moment someone opens a present chosen with love.</p><p>I hope your Christmas is full of those moments.</p><p>And when you see your presents, I hope you remember this letter and know that I was very pleased to include you in my Christmas Eve journey.</p></section><section><h3>UNTIL CHRISTMAS EVE</h3><p>Keep enjoying the days ahead, ${esc(state.child||'Your little believer')}. Keep being curious, keep finding reasons to laugh, and keep offering kindness whenever you can.</p><p>If you have a difficult day, take a breath and begin again. Your place on the Nice List does not depend on getting every little thing right. There is always room to learn, to ask for help, and to make a better choice.</p><p>On Christmas Eve, follow your usual bedtime routine and settle down for a good night’s rest. There is no need to stay awake to wait for me. I have a busy journey to make, and the Christmas surprises will be ready for you to discover when morning comes.</p><p>Until then, please keep this certificate as a special message from my office: you have done well this year, you are on my Nice List, and I am looking forward to bringing a little North Pole magic to your Christmas.</p></section><footer class="certificate-footer"><p>With warmest wishes and a very merry Christmas,</p><div class="signature">Santa Claus</div><p>Keeper of the Christmas Register<br>Master of the Christmas Eve Sleigh<br>North Pole</p><div class="certificate-seal"><span aria-hidden="true">✧</span><strong>OFFICIALLY APPROVED</strong><span>NICE LIST CONFIRMED · CHRISTMAS 2026</span></div><p class="certificate-issued">Issued by the Office of Santa Claus<br>Bearing the official Christmas seal of the North Pole</p></footer></div></article><div class="actions" style="margin-top:25px"><button data-go="write">Write my letter ✉</button><button data-go="journey">Visit the mailroom →</button></div>`)}function render(){const page=location.hash.slice(1)||'home';({home,write,gifts:catalog,journey,reply,parents,followup}[page]||home)();document.querySelector('.parent-link').hidden=true;document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));window.scrollTo(0,0);const sleigh=document.querySelector('#sparkleSleigh');if(sleigh){sleigh.onclick=()=>{const sky=document.querySelector('.enchanted-sky');sky.classList.remove('wish-sparkle');void sky.offsetWidth;sky.classList.add('wish-sparkle');document.querySelector('#skyMessage').textContent='A sky full of wishes, and a little magic just for you ✨';};document.querySelector('#pauseFlight').onclick=e=>{const paused=document.querySelector('.enchanted-sky').classList.toggle('flight-paused');e.currentTarget.textContent=paused?'Resume flight':'Pause flight';e.currentTarget.setAttribute('aria-pressed',String(paused));};} const journeyScene=document.querySelector('.letter-journey');if(journeyScene){const flight=document.querySelector('.letter-flight');const status=document.querySelector('#journeyStatus');flight.onanimationend=e=>{if(e.animationName==='letter-to-elves'){journeyScene.classList.add('journey-arrived');status.textContent='A little wonder at the elves’ doorstep ✧';}};document.querySelector('#replayJourney').onclick=()=>{journeyScene.classList.remove('journey-arrived','journey-paused');flight.style.animation='none';void flight.offsetWidth;flight.style.animation='';status.textContent='Sealed with a little Christmas sparkle…';const pause=document.querySelector('#pauseJourney');pause.textContent='Pause';pause.setAttribute('aria-pressed','false');};document.querySelector('#pauseJourney').onclick=e=>{const paused=journeyScene.classList.toggle('journey-paused');e.currentTarget.textContent=paused?'Play':'Pause';e.currentTarget.setAttribute('aria-pressed',String(paused));};} document.title=(['parents','followup'].includes(page)?'Grown-ups’ Post Office':'North Pole Express')+' · Christmas Magic'}window.addEventListener('hashchange',render);render();
+const gifts = [
+  {id:"lego",name:"LEGO Classic Brick Box",icon:"🧱",category:"Build",description:"Build a world from your imagination.",query:"LEGO Classic Medium Creative Brick Box 10696",target:"https://www.target.com/p/-/A-16747750"},
+  {id:"cars",name:"Hot Wheels 5-Pack",icon:"🏎️",category:"Adventure",description:"Tiny wheels. Big racing adventures.",query:"Hot Wheels 5 pack cars",target:"https://www.target.com/p/-/A-14783201"},
+  {id:"art",name:"Crayola Art Case",icon:"🎨",category:"Create",description:"Turn big ideas into colorful pictures.",query:"Crayola Inspiration Art Case",target:"https://www.target.com/s/crayola%2Binspiration%2Bart%2Bcase"},
+  {id:"dough",name:"Play-Doh Fun Factory",icon:"🌈",category:"Create",description:"Squish, shape, and make something wonderful.",query:"Play-Doh Fun Factory",target:"https://www.target.com/s/playdoh%2Bfactory"},
+  {id:"bear",name:"A cuddly teddy bear",icon:"🧸",category:"Cozy",description:"A soft new friend for cozy adventures.",query:"teddy bear plush toy"},
+  {id:"rocket",name:"A space adventure set",icon:"🚀",category:"Adventure",description:"Dream up a journey to the stars.",query:"kids space rocket toy set"},
+  {id:"puppy",name:"A puppy",icon:"🐶",category:"Friends",description:"A four-legged friend to love and care for.",query:null},
+  {id:"bike",name:"A bicycle",icon:"🚲",category:"Outdoor",description:"Pedal toward a whole new adventure.",query:"kids bicycle"},
+  {id:"skates",name:"Rollerblades",icon:"🛼",category:"Outdoor",description:"Glide, roll, and learn new moves.",query:"kids inline skates"},
+  {id:"scooter",name:"A kick scooter",icon:"🛴",category:"Outdoor",description:"Scoot along on your next adventure.",query:"kids kick scooter"},
+  {id:"skateboard",name:"A skateboard",icon:"🛹",category:"Outdoor",description:"Dream up your next great ride.",query:"kids beginner skateboard"},
+  {id:"soccer",name:"A soccer ball",icon:"⚽",category:"Outdoor",description:"Kick off a game with your friends.",query:"kids soccer ball"},
+  {id:"basketball",name:"A basketball",icon:"🏀",category:"Outdoor",description:"Bounce into a new favorite game.",query:"kids basketball"},
+  {id:"doll",name:"A baby doll",icon:"👶",category:"Play",description:"A little friend for big pretend adventures.",query:"baby doll toy"},
+  {id:"dollhouse",name:"A dollhouse",icon:"🏠",category:"Play",description:"Create tiny rooms and enormous stories.",query:"kids dollhouse"},
+  {id:"kitchen",name:"A play kitchen",icon:"🍳",category:"Play",description:"Cook up a pretend Christmas feast.",query:"kids play kitchen"},
+  {id:"train",name:"A toy train set",icon:"🚂",category:"Build",description:"Build the tracks for your very own express.",query:"kids toy train set"},
+  {id:"tiles",name:"Magnetic building tiles",icon:"🔷",category:"Build",description:"Stack bright shapes into amazing creations.",query:"magnetic building tiles kids"},
+  {id:"puzzle",name:"A jigsaw puzzle",icon:"🧩",category:"Build",description:"Piece together a picture one discovery at a time.",query:"kids jigsaw puzzle"},
+  {id:"dinosaur",name:"Dinosaur toys",icon:"🦕",category:"Adventure",description:"Roam a prehistoric world of your own.",query:"kids dinosaur toy set"},
+  {id:"remote",name:"A remote-control car",icon:"🚙",category:"Adventure",description:"Take the controls and race into adventure.",query:"kids remote control car"},
+  {id:"superhero",name:"Superhero figures",icon:"🦸",category:"Play",description:"Tell stories full of courage and kindness.",query:"kids superhero action figures"},
+  {id:"costume",name:"Dress-up costumes",icon:"👑",category:"Play",description:"Become a character from your imagination.",query:"kids dress up costumes"},
+  {id:"science",name:"A science experiment kit",icon:"🧪",category:"Discover",description:"Ask big questions and make little discoveries.",query:"kids science experiment kit"},
+  {id:"telescope",name:"A telescope",icon:"🔭",category:"Discover",description:"Look up and wonder about the night sky.",query:"kids telescope"},
+  {id:"books",name:"A collection of storybooks",icon:"📚",category:"Cozy",description:"Open the door to a whole new story.",query:"children storybook collection"},
+  {id:"tent",name:"An indoor play tent",icon:"⛺",category:"Cozy",description:"Make a cozy hideaway for make-believe.",query:"kids indoor play tent"},
+  {id:"music",name:"A musical keyboard",icon:"🎹",category:"Create",description:"Make up a tune that is all your own.",query:"kids musical keyboard"},
+  {id:"craft",name:"A jewelry craft kit",icon:"📿",category:"Create",description:"String together something bright and beautiful.",query:"kids jewelry making craft kit"},
+  {id:"game",name:"A family board game",icon:"🎲",category:"Play",description:"Bring everyone together for a little fun.",query:"kids family board game"}
+];
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+const esc = s => String(s).replace(
+  /[&<>"']/g,
+  c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[c])
+);
+
+const chosen = () =>
+  gifts.filter(g => state.gifts.includes(g.id));
+
+const go = route => {
+  location.hash = route;
+};
+
+function shell(kicker, title, sub, body) {
+  return `
+    <section class="scene">
+      <a href="#home" class="back">
+        ← Back to the snowy village
+      </a>
+      <div class="heading">
+        <small>${kicker}</small>
+        <h1>${title}</h1>
+        <p>${sub}</p>
+      </div>
+      ${body}
+    </section>
+  `;
+}
+
+/* =========================================================
+   CHRISTMAS VILLAGE HOMEPAGE
+   ========================================================= */
+
+function home() {
+  app.innerHTML = `
+    <section class="world"
+      aria-label="Snowy North Pole village with Santa, an elf, and the North Pole Express train">
+
+      ${[
+        ["home","home","Home"],
+        ["write","write","Write to Santa"],
+        ["gifts","gifts","Toy workshop"],
+        ["reply","reply","Santa’s reply"],
+        ["journey","journey","Ride the Express"],
+        ["main-write","write","Start your Santa letter"]
+      ].map(([cls,route,name]) => `
+        <a href="#${route}" class="hotspot ${cls}">
+          <span>${name}</span>
+        </a>
+      `).join("")}
+
+      <a class="village-nav-cover adults-tab" href="#parents">
+        Adults
+      </a>
+
+      <nav class="village-steps"
+        aria-label="Your Christmas adventure">
+
+        <a href="#write">
+          <span>✉</span>
+          <b>1. Write<br>Your Letter</b>
+        </a>
+
+        <a href="#journey">
+          <span>🚂</span>
+          <b>2. Ride the<br>North Pole Express</b>
+        </a>
+
+        <a href="#gifts">
+          <span>🎁</span>
+          <b>3. Choose<br>Your Wishes</b>
+        </a>
+
+        <a href="#reply">
+          <span>✉</span>
+          <b>4. Receive a<br>Letter from Santa</b>
+        </a>
+      </nav>
+    </section>
+
+    <section class="enchanted-sky"
+      aria-label="Santa and his reindeer flying over an enchanted snowy village">
+
+      <div class="sky-glow" aria-hidden="true"></div>
+
+      <div class="magic-stars" aria-hidden="true">
+        ${[
+          [8,9,0],[39,26,1],[70,43,2],
+          [1,60,3],[32,19,4],[63,36,0],
+          [94,53,1],[25,12,2],[56,29,3],
+          [87,46,4],[18,63,0],[49,22,1],
+          [80,39,2],[11,56,3],[42,15,4]
+        ].map(([x,y,d]) => `
+          <i style="--sx:${x}%;--sy:${y}%;--delay:${d}s">
+            ✧
+          </i>
+        `).join("")}
+      </div>
+
+      <div class="sleigh-flight">
+        <button class="flying-sleigh" id="sparkleSleigh"
+          aria-label="Send Christmas sparkles across the village">
+          <img src="flying-reindeer.png"
+            alt="Santa’s red-and-gold sleigh pulled by three flying reindeer"
+            draggable="false">
+        </button>
+      </div>
+
+      <div class="sky-caption">
+        <span id="skyMessage" role="status">
+          A little Christmas magic, on its way to you ✧
+        </span>
+        <button id="pauseFlight" aria-pressed="false">
+          Pause flight
+        </button>
+      </div>
+    </section>
+
+    <section class="welcome">
+      <h1 class="mobile-heading">
+        Welcome to the North Pole!
+      </h1>
+
+      <p>A little letter is the start of something magical.</p>
+
+      <div class="actions">
+        <button data-go="write">✉ Write to Santa</button>
+        <button class="gold" data-go="gifts">
+          🎁 Explore the toy workshop
+        </button>
+      </div>
+    </section>
+  `;
+}
+
+/* =========================================================
+   SANTA LETTER
+   ========================================================= */
+
+function write() {
+  app.innerHTML = shell(
+    "SANTA’S COZY MAILROOM",
+    "Your very own letter to Santa.",
+    "Take your time. There is room for every little story and big Christmas wish.",
+    `
+    <div class="letter-desk">
+      <article class="santa-stationery">
+
+        <div class="stationery-header">
+          <span>
+            NORTH POLE EXPRESS<br>
+            <small>CHRISTMAS CORRESPONDENCE</small>
+          </span>
+
+          <div class="letter-postage"
+            aria-label="Decorative North Pole snowflake stamp">
+            <span>❄</span>
+            <b>NORTH POLE</b>
+            <small>SPECIAL DELIVERY</small>
+          </div>
+        </div>
+
+        <div class="postmark" aria-hidden="true">
+          SANTA’S MAILROOM<br>
+          ✧ CHRISTMAS MAGIC ✧
+        </div>
+
+        <h2>Dear Santa,</h2>
+
+        <form id="letter">
+          <label>
+            My first name is…
+            <input name="child" required maxlength="50"
+              autocomplete="off"
+              placeholder="What should Santa call you?"
+              value="${esc(state.child)}">
+          </label>
+
+          <label>
+            This Christmas, I’m wishing for…
+            <textarea name="wishes" rows="4" maxlength="2000"
+              placeholder="Tell Santa about your Christmas wishes…">${esc(state.wishes)}</textarea>
+          </label>
+
+          <label>
+            Something kind I did or learned this year…
+            <textarea name="proud" rows="3" maxlength="1500"
+              placeholder="A little story you’d like Santa to hear…">${esc(state.proud)}</textarea>
+          </label>
+
+          <label>
+            What else would you love Santa to know?
+            <span class="letter-prompt">
+              Tell him about your favorite things, a special
+              memory, a big dream, or a question you’ve always
+              wanted to ask. Write as much as you like.
+            </span>
+            <textarea name="more" rows="8" maxlength="6000"
+              placeholder="Dear Santa, there’s something else I wanted to tell you…">${esc(state.more)}</textarea>
+          </label>
+
+          ${chosen().length ? `
+            <div class="stationery-wishes">
+              <b>Wishes tucked into my letter</b>
+              ${chosen().map(g => `
+                <p>${g.icon} ${esc(g.name)}</p>
+              `).join("")}
+            </div>
+          ` : ""}
+
+          <div class="letter-signoff">
+            With love,<br>
+            <span>${esc(state.child || "Your little believer")}</span>
+          </div>
+
+          <div class="actions">
+            <button class="gold" type="submit"
+              name="next" value="gifts">
+              Add wishes from the workshop →
+            </button>
+
+            <button type="submit"
+              name="next" value="journey">
+              Seal my letter ✉
+            </button>
+          </div>
+
+          <p id="letterError" role="status"></p>
+        </form>
+
+        <div class="stationery-footer">
+          ✧ A LITTLE LETTER. A LITTLE CHRISTMAS MAGIC. ✧
+        </div>
+      </article>
+    </div>
+    `
+  );
+
+  const form = document.querySelector("#letter");
+
+  form.oninput = () => {
+    if (draftLoadingBlocked()) return;
+
+    for (const key of ["child","wishes","proud","more"]) {
+      state[key] = form.elements[key].value;
+    }
+
+    scheduleDraftSave();
+  };
+
+  form.onsubmit = event => {
+    event.preventDefault();
+
+    if (draftLoadingBlocked()) return;
+
+    const data = new FormData(event.currentTarget);
+
+    for (const key of ["child","wishes","proud","more"]) {
+      state[key] = String(data.get(key) || "").trim();
+    }
+
+    if (!state.child) {
+      document.querySelector("#letterError").textContent =
+        "Tell Santa your first name.";
+      return;
+    }
+
+    const next = event.submitter?.value || "journey";
+
+    if (
+      next === "journey" &&
+      !state.wishes &&
+      !state.more &&
+      !state.gifts.length
+    ) {
+      document.querySelector("#letterError").textContent =
+        "Write Santa a little message or add a wish first.";
+      return;
+    }
+
+    scheduleDraftSave();
+    go(next);
+  };
+}
+
+/* =========================================================
+   TOY WORKSHOP
+   ========================================================= */
+
+function catalog() {
+  app.innerHTML = shell(
+    "THE ELVES’ TOY WORKSHOP",
+    "What makes your eyes sparkle?",
+    "Wander through the toy shelves. Tap a wish to tuck it into your letter.",
+    `
+    <div class="filters">
+      ${[
+        "All","Build","Create","Adventure",
+        "Outdoor","Play","Cozy","Discover","Friends"
+      ].map(c => `
+        <button
+          class="${c === state.filter ? "active" : ""}"
+          data-filter="${c}">
+          ${c}
+        </button>
+      `).join("")}
+    </div>
+
+    <div class="gift-grid">
+      ${gifts.filter(g =>
+        state.filter === "All" ||
+        state.filter === g.category
+      ).map(g => `
+        <article class="gift ${state.gifts.includes(g.id) ? "selected" : ""}">
+          <div class="toy" aria-label="Illustration of ${esc(g.name)}"
+            role="img">${g.icon}</div>
+
+          <small>${g.category.toUpperCase()} · WISH IDEA</small>
+          <h2>${esc(g.name)}</h2>
+          <p>${esc(g.description)}</p>
+
+          <button data-gift="${g.id}"
+            aria-pressed="${state.gifts.includes(g.id)}">
+            ${state.gifts.includes(g.id)
+              ? "✓ In my letter · remove"
+              : "✧ Add to my wishes"}
+          </button>
+        </article>
+      `).join("")}
+    </div>
+
+    <div class="basket" role="status">
+      ✉ ${state.gifts.length}
+      ${state.gifts.length === 1 ? "wish" : "wishes"}
+      tucked into your letter<br>
+
+      <a href="#write">
+        ${state.child ? "Back to my letter" : "Tell Santa my name"} →
+      </a>
+
+      ${state.child
+        ? ' &nbsp; · &nbsp; <a href="#journey">All aboard →</a>'
+        : ""}
+    </div>
+    `
+  );
+
+  document.querySelectorAll("[data-filter]").forEach(button => {
+    button.onclick = () => {
+      state.filter = button.dataset.filter;
+      catalog();
+    };
+  });
+
+  document.querySelectorAll("[data-gift]").forEach(button => {
+    button.onclick = () => {
+      if (draftLoadingBlocked()) return;
+
+      const scrollY = window.scrollY;
+      const id = button.dataset.gift;
+
+      state.gifts = state.gifts.includes(id)
+        ? state.gifts.filter(x => x !== id)
+        : [...state.gifts, id];
+
+      scheduleDraftSave();
+      catalog();
+
+      window.scrollTo(0, scrollY);
+
+      document.querySelector(
+        `[data-gift="${id}"]`
+      )?.focus({preventScroll:true});
+    };
+  });
+}
+
+/* =========================================================
+   NORTH POLE EXPRESS LETTER JOURNEY
+   ========================================================= */
+
+function journey() {
+  if (
+    !state.child ||
+    (!state.wishes && !state.more && !state.gifts.length)
+  ) {
+    app.innerHTML = shell(
+      "NORTH POLE EXPRESS",
+      "A little letter is your ticket.",
+      "Tell Santa your name and write him a wish or a story.",
+      `
+      <div class="paper narrow center">
+        <h2>The elves have saved you a seat.</h2>
+        <button data-go="write">Write my letter ✉</button>
+      </div>
+      `
+    );
+    return;
+  }
+
+  app.innerHTML = shell(
+    "SPECIAL NORTH POLE DELIVERY",
+    `${esc(state.child)}’s letter takes flight.`,
+    "A little Christmas imagination, all the way to the elves’ mailroom.",
+    `
+    <section class="letter-journey"
+      aria-label="An animated letter traveling through a snowy forest to the North Pole elves">
+
+      <div class="journey-vignette"></div>
+
+      <div class="journey-glints" aria-hidden="true">
+        ✦ &nbsp; ✧ &nbsp; ✦ &nbsp; ✧
+      </div>
+
+      <div class="letter-flight">
+        <div class="travel-envelope">
+          <div class="envelope-flap"></div>
+
+          <div class="envelope-front">
+            <small>TO SANTA CLAUS</small>
+            <b>The North Pole</b>
+            <span class="travel-stamp">❄</span>
+          </div>
+
+          <div class="wax-seal">S</div>
+        </div>
+
+        <span class="letter-dust" aria-hidden="true">
+          ✧ · ✦ · ✧
+        </span>
+      </div>
+
+      <div class="mailroom-glow" aria-hidden="true"></div>
+
+      <div class="journey-caption">
+        <span id="journeyStatus" role="status">
+          Sealed with a little Christmas sparkle…
+        </span>
+
+        <div>
+          <button id="pauseJourney" aria-pressed="false">
+            Pause
+          </button>
+          <button id="replayJourney">
+            Replay journey ↻
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="journey-next">
+      <div>
+        <span>✧ SPECIAL DELIVERY ✧</span>
+        <h2>Next stop: Santa’s mailroom.</h2>
+      </div>
+
+      <div class="actions">
+        <button class="gold" data-go="parents">
+          Mail to Santa ✉
+        </button>
+        <button data-go="write">Read my letter</button>
+      </div>
+    </div>
+    `
+  );
+}
+
+/* =========================================================
+   SHOPPING LINKS
+   ========================================================= */
+
+function links(g) {
+  if (g.id === "puppy") {
+    return `
+      <p>
+        A family wish to discuss together.
+        Your letter shares the dream; a pet is a family
+        decision, and isn’t included in this package.
+      </p>
+    `;
+  }
+
+  const walmart =
+    "https://www.walmart.com/search?q=" +
+    encodeURIComponent(g.query);
+
+  const target = g.target ||
+    "https://www.target.com/s?searchTerm=" +
+    encodeURIComponent(g.query);
+
+  return `
+    <div class="shop-links">
+      <a href="${esc(walmart)}"
+        target="_blank" rel="noopener noreferrer">
+        Find at Walmart ↗
+      </a>
+
+      <a class="target" href="${esc(target)}"
+        target="_blank" rel="noopener noreferrer">
+        ${g.target?.includes("/p/")
+          ? "View at Target"
+          : "Find at Target"} ↗
+      </a>
+    </div>
+  `;
+}
+
+/* =========================================================
+   PARENT INFORMATION
+   ========================================================= */
+
+function field(name, label, extra = "") {
+  return `
+    <label>
+      ${label}
+      <input name="${name}" ${extra}
+        value="${esc(
+          state.parent[name] ||
+          (name === "recipient" ? state.child : "")
+        )}">
+    </label>
+  `;
+}
+
+function parents() {
+  app.innerHTML = shell(
+    "FOR GROWN-UPS",
+    "A little magic, delivered.",
+    "A keepsake for your child. A copy of their wishes for you.",
+    `
+    <div class="parent-grid">
+      <div>
+        <article class="paper package-summary">
+          <h2>The first Santa package</h2>
+
+          <div class="package-price">
+            $13.99
+            <small>One child · one special delivery</small>
+          </div>
+
+          <ul class="included">
+            <li>
+              <span>✉</span>
+              <div>
+                <b>An email for you</b>
+                <p>A copy of exactly what your child wrote,
+                  with their chosen wishes and shopping links.</p>
+              </div>
+            </li>
+            <li>
+              <span>✧</span>
+              <div>
+                <b>A certificate in the mail</b>
+                <p>A named Certificate of Christmas Magic,
+                  ready to become a keepsake.</p>
+              </div>
+            </li>
+            <li>
+              <span>❄</span>
+              <div>
+                <b>A personalized Santa letter</b>
+                <p>A reply inspired by your child’s own words,
+                  mailed together with their certificate.</p>
+              </div>
+            </li>
+          </ul>
+
+          <p class="simple-note">
+            Your email and the mailing request are sent
+            after payment is confirmed.
+          </p>
+        </article>
+
+        <article class="paper shopping">
+          <h2>Keep the letters going</h2>
+
+          <div class="package-price repeat-price">
+            $7
+            <small>Each additional personalized mailed reply</small>
+          </div>
+
+          <p>
+            Once your child has received their first package,
+            they can write to Santa again—and again.
+            Each new reply is a separate $7 purchase.
+            No subscription.
+          </p>
+
+          <p>
+            After your original order and follow-up payment
+            are verified, you receive the mailing address
+            and instructions. Post your child’s next letter,
+            and Santa sends a detailed personal reply in the mail.
+          </p>
+
+          <p class="simple-note">
+            You provide postage for the letter you send.
+            The $7 covers one personalized reply mailed
+            back to your child.
+          </p>
+
+          <button class="gold" data-go="followup">
+            Arrange another Santa reply →
+          </button>
+        </article>
+
+        <details class="paper shopping review-details">
+          <summary>Review your child’s letter & wishes</summary>
+
+          ${state.child ? `
+            <div class="list">
+              Dear Santa,<br><br>
+              ${esc(
+                state.wishes ||
+                "My wishes are on the toy shelf below."
+              )}
+              <br><br>
+              ${state.proud
+                ? "Something I’m proud of: " +
+                  esc(state.proud) + "<br><br>"
+                : ""}
+              ${state.more
+                ? esc(state.more) + "<br><br>"
+                : ""}
+              With love, ${esc(state.child)}
+            </div>
+          ` : `
+            <p>
+              No letter yet.
+              <a href="#write">Start the adventure</a>.
+            </p>
+          `}
+
+          ${chosen().map(g => `
+            <article class="shop-item">
+              <h3>${g.icon} ${esc(g.name)}</h3>
+              ${links(g)}
+            </article>
+          `).join("")}
+        </details>
+      </div>
+
+      <article class="paper">
+        <h2>Where should the magic go?</h2>
+
+        <form id="parentForm">
+          ${field("name","Your name",
+            'required maxlength="100" autocomplete="name"')}
+
+          ${field("email","Your email",
+            'required type="email" autocomplete="email"')}
+
+          ${field("recipient","Child’s full name",
+            'required maxlength="100"')}
+
+          ${field("address","Mailing address",
+            'required maxlength="200" autocomplete="street-address"')}
+
+          <div class="two">
+            ${field("city","City",
+              'required maxlength="100"')}
+
+            ${field("region","State / region",
+              'maxlength="100"')}
+
+            ${field("postal","Postal code",
+              'required maxlength="30"')}
+
+            ${field("country","Country",
+              'required maxlength="100"')}
+          </div>
+
+          <label class="checkbox">
+            <input type="checkbox" required>
+            I am the parent or guardian and agree
+            to the $13.99 package.
+          </label>
+
+          <button class="paypal" type="button" disabled>
+            PayPal · $13.99 · Coming soon
+          </button>
+
+          <p class="simple-note">
+            Checkout opens once payment and delivery
+            setup is complete.
+          </p>
+        </form>
+      </article>
+    </div>
+    `
+  );
+
+  const form = document.querySelector("#parentForm");
+
+  form.oninput = event => {
+    state.parent = Object.fromEntries(
+      new FormData(event.currentTarget)
+    );
+  };
+
+  form.onsubmit = event => event.preventDefault();
+}
+
+/* =========================================================
+   RETURNING FAMILIES
+   ========================================================= */
+
+function followup() {
+  app.innerHTML = shell(
+    "FOR RETURNING FAMILIES",
+    "Another letter. More North Pole magic.",
+    "Keep the conversation going, one letter at a time.",
+    `
+    <article class="paper narrow">
+      <h2>A personal reply from Santa</h2>
+
+      <div class="package-price">
+        $7
+        <small>One new reply, sent by post</small>
+      </div>
+
+      <ol class="reply-instructions">
+        <li>Have your original $13.99 order number ready.</li>
+        <li>Purchase one $7 reply. We verify the original
+          order and your new payment.</li>
+        <li>Receive the mailing address and posting
+          instructions privately.</li>
+        <li>Mail your child’s letter with your order
+          reference and your own postage.</li>
+        <li>Receive a detailed, personalized reply
+          from Santa in the mail.</li>
+      </ol>
+
+      <p>
+        Repeat whenever your child wants to write again.
+        Each reply costs $7; there is no subscription.
+      </p>
+
+      <form id="followupForm">
+        <label>
+          Original order number
+          <input name="originalOrder"
+            required maxlength="100" autocomplete="off">
+        </label>
+
+        <label>
+          Parent’s email
+          <input name="email" type="email"
+            required autocomplete="email"
+            value="${esc(state.parent.email || "")}">
+        </label>
+
+        <button class="paypal" type="button" disabled>
+          PayPal · $7 · Coming soon
+        </button>
+      </form>
+
+      <div class="address-locked">
+        <span>🔒</span>
+        <div>
+          <b>Mailing address shared after payment</b>
+          <p>
+            Available only after your original order
+            and the new $7 payment have been verified.
+          </p>
+        </div>
+      </div>
+
+      <p class="simple-note">
+        Checkout is not open yet. No mailing address
+        is stored in this public page.
+      </p>
+
+      <p class="center">
+        <a href="#parents">← Back to the first Santa package</a>
+      </p>
+    </article>
+    `
+  );
+
+  document.querySelector("#followupForm").onsubmit =
+    event => event.preventDefault();
+}
+
+/* =========================================================
+   SANTA CERTIFICATE
+   ========================================================= */
+
+function reply() {
+  app.innerHTML = shell(
+    "AN OFFICIAL MESSAGE FROM SANTA",
+    "Your place on the Nice List.",
+    "Personally approved at the North Pole · Christmas 2026",
+    `
+    <article class="paper santa-certificate"
+      aria-labelledby="certificate-title">
+
+      <header class="certificate-header">
+        <p class="certificate-express">NORTH POLE EXPRESS</p>
+        <p class="certificate-office">
+          THE OFFICE OF SANTA CLAUS
+        </p>
+        <p>North Pole Christmas Registry · Christmas 2026</p>
+
+        <div class="certificate-rule" aria-hidden="true">✧</div>
+
+        <h2 id="certificate-title">
+          Certificate of Good Conduct<br>
+          &amp; Official Christmas Confirmation
+        </h2>
+
+        <p>Issued with the personal approval of Santa Claus</p>
+        <p>This certificate is proudly presented to</p>
+
+        <div class="sample-name">
+          ${esc(state.child || "Your little believer")}
+        </div>
+
+        <p>
+          In recognition of your kindness, your efforts,
+          and the wonderful person you have continued to
+          become throughout the year.
+        </p>
+      </header>
+
+      <div class="certificate-letter">
+        <p>Dear ${esc(state.child || "Your little believer")},</p>
+
+        <p>
+          It is my great pleasure to send you this official
+          certificate from my office at the North Pole.
+          The Christmas preparations are well underway,
+          the workshop is full of activity, and I have
+          been looking forward to putting pen to paper
+          to share some very special news with you.
+        </p>
+
+        <p>
+          I have personally reviewed this year’s Christmas
+          Register, and I am delighted to confirm that your
+          name has been entered on my Nice List for Christmas 2026.
+        </p>
+
+        <p>
+          Please consider this your official confirmation,
+          signed by me and recorded here at the North Pole:
+          you have been good throughout the year, your efforts
+          have been recognised, and a magical Christmas is
+          being prepared for you.
+        </p>
+
+        <section>
+          <h3>A PERSONAL COMMENDATION FROM SANTA</h3>
+
+          <p>
+            Being good is about the choices you make as you grow.
+            It is there when you try to be kind, when you listen,
+            when you share, and when you help someone who needs you.
+            It is there when you say thank you, when you tell the
+            truth, and when you find the courage to say you are sorry.
+          </p>
+
+          <p>
+            Sometimes the smallest acts of kindness deserve the
+            greatest recognition. Making room for someone else,
+            being gentle, offering a helping hand, or trying again
+            after a difficult moment can make a bigger difference
+            than you realise.
+          </p>
+
+          <p>Those are the sorts of things I value very much.</p>
+
+          <p>
+            Nobody gets everything right every day,
+            ${esc(state.child || "Your little believer")}.
+            Even here at the North Pole, we have muddled
+            instructions, dropped parcels, and the occasional
+            disagreement over whose turn it is to tidy the
+            ribbon cupboard. What matters is learning,
+            making things right when you can, and continuing
+            to do your best.
+          </p>
+
+          <p>
+            You have plenty to be proud of this year.
+            I hope that, when you look at this certificate,
+            you remember that your kindness matters and
+            that your efforts count.
+          </p>
+        </section>
+
+        <section>
+          <h3>CONFIRMATION FROM THE NORTH POLE</h3>
+
+          <p>
+            By the authority of my office, I hereby confirm
+            the following entry in the Christmas Register:
+          </p>
+
+          <dl class="certificate-register">
+            <div><dt>Name</dt>
+              <dd>${esc(state.child || "Your little believer")}</dd></div>
+            <div><dt>Christmas year</dt><dd>2026</dd></div>
+            <div><dt>Nice List standing</dt><dd>Confirmed</dd></div>
+            <div><dt>Recognition</dt>
+              <dd>Kindness, good conduct, and continued effort</dd></div>
+            <div><dt>Christmas arrangements</dt>
+              <dd>Approved by Santa Claus</dd></div>
+            <div><dt>Special delivery</dt>
+              <dd>Presents and Christmas surprises being prepared</dd></div>
+          </dl>
+
+          <p>
+            Your name has been included in our Christmas Eve
+            preparations. The workshop teams have their
+            instructions, the wrapping benches are busy,
+            and the sleigh preparations are moving along splendidly.
+          </p>
+
+          <p>
+            There are presents being prepared for you,
+            ${esc(state.child || "Your little believer")},
+            and I am looking forward to bringing them on
+            my Christmas Eve journey.
+          </p>
+
+          <p>
+            Some details must remain a secret until Christmas
+            morning. The elves take great pride in a well-kept
+            surprise, and I would hate to spoil their work by
+            revealing too much in a letter. You may, however,
+            be quite certain that you have been remembered
+            here at the North Pole.
+          </p>
+        </section>
+
+        <section>
+          <h3>NEWS FROM MY WORKSHOP</h3>
+
+          <p>
+            You would enjoy seeing the workshop at this time
+            of year. There are wooden drawers filled with gift
+            tags, shelves of brightly coloured paper, and long
+            tables where the elves carefully finish and check
+            the Christmas parcels.
+          </p>
+
+          <p>
+            Each present passes through several pairs of hands
+            before it is ready for the sleigh. The makers check
+            their work, the wrapping team folds every corner,
+            and the delivery team makes certain that each label
+            is clear and securely attached.
+          </p>
+
+          <p>
+            On my desk, beside the Christmas Register, I keep
+            the letters and wishes that help make this season
+            so special. Thank you for sharing yours with me.
+            I have read them with care.
+          </p>
+
+          <p>
+            Although I must choose what can travel in the sleigh,
+            your wishes are an important part of my preparations.
+            So are the happy surprises that you may never have
+            thought to ask for.
+          </p>
+
+          <p>
+            Beyond the workshop, the reindeer are getting ready
+            too. Their harnesses are being checked, their bells
+            are being polished, and they are enjoying plenty of
+            rest before our long journey. I shall be checking the
+            sleigh myself before we leave, as I do every Christmas Eve.
+          </p>
+
+          <p>
+            There is a great deal to arrange, but I always make
+            time for certificates like yours. A child should know
+            when there is something worth celebrating, and your
+            place on this year’s Nice List is certainly worth celebrating.
+          </p>
+        </section>
+
+        <section>
+          <h3>MY CHRISTMAS PROMISE TO YOU</h3>
+
+          <p>
+            This Christmas, you can look forward to presents,
+            surprises, and the excitement of discovering what
+            Christmas morning has brought.
+          </p>
+
+          <p>
+            My wish is that you also enjoy everything around
+            those moments: the anticipation before bedtime,
+            the familiar decorations, the laughter, and the
+            pleasure of sharing a special day with the people
+            who care about you.
+          </p>
+
+          <p>
+            You do not need to have a perfect Christmas for it
+            to be a magical one. Sometimes the memories that stay
+            with us come from the simplest things—a kind word,
+            a favourite story, a shared joke, or the moment
+            someone opens a present chosen with love.
+          </p>
+
+          <p>I hope your Christmas is full of those moments.</p>
+
+          <p>
+            And when you see your presents, I hope you remember
+            this letter and know that I was very pleased to
+            include you in my Christmas Eve journey.
+          </p>
+        </section>
+
+        <section>
+          <h3>UNTIL CHRISTMAS EVE</h3>
+
+          <p>
+            Keep enjoying the days ahead,
+            ${esc(state.child || "Your little believer")}.
+            Keep being curious, keep finding reasons to laugh,
+            and keep offering kindness whenever you can.
+          </p>
+
+          <p>
+            If you have a difficult day, take a breath and begin
+            again. Your place on the Nice List does not depend
+            on getting every little thing right. There is always
+            room to learn, to ask for help, and to make a better choice.
+          </p>
+
+          <p>
+            On Christmas Eve, follow your usual bedtime routine
+            and settle down for a good night’s rest. There is no
+            need to stay awake to wait for me. I have a busy journey
+            to make, and the Christmas surprises will be ready for
+            you to discover when morning comes.
+          </p>
+
+          <p>
+            Until then, please keep this certificate as a special
+            message from my office: you have done well this year,
+            you are on my Nice List, and I am looking forward to
+            bringing a little North Pole magic to your Christmas.
+          </p>
+        </section>
+
+        <footer class="certificate-footer">
+          <p>
+            With warmest wishes and a very merry Christmas,
+          </p>
+
+          <div class="signature">Santa Claus</div>
+
+          <p>
+            Keeper of the Christmas Register<br>
+            Master of the Christmas Eve Sleigh<br>
+            North Pole
+          </p>
+
+          <div class="certificate-seal">
+            <span aria-hidden="true">✧</span>
+            <strong>OFFICIALLY APPROVED</strong>
+            <span>NICE LIST CONFIRMED · CHRISTMAS 2026</span>
+          </div>
+
+          <p class="certificate-issued">
+            Issued by the Office of Santa Claus<br>
+            Bearing the official Christmas seal of the North Pole
+          </p>
+        </footer>
+      </div>
+    </article>
+
+    <div class="actions" style="margin-top:25px">
+      <button data-go="write">Write my letter ✉</button>
+      <button data-go="journey">Visit the mailroom →</button>
+    </div>
+    `
+  );
+}
+
+/* =========================================================
+   PAGE RENDERING + ANIMATIONS
+   ========================================================= */
+
+function render() {
+  const page = location.hash.slice(1) || "home";
+
+  const routes = {
+    home,
+    write,
+    gifts: catalog,
+    journey,
+    reply,
+    parents,
+    followup
+  };
+
+  (routes[page] || home)();
+
+  const parentLink = document.querySelector(".parent-link");
+  if (parentLink) parentLink.hidden = true;
+
+  document.querySelectorAll("[data-go]").forEach(button => {
+    button.onclick = () => go(button.dataset.go);
+  });
+
+  window.scrollTo(0, 0);
+
+  const sleigh = document.querySelector("#sparkleSleigh");
+
+  if (sleigh) {
+    sleigh.onclick = () => {
+      const sky = document.querySelector(".enchanted-sky");
+
+      sky.classList.remove("wish-sparkle");
+      void sky.offsetWidth;
+      sky.classList.add("wish-sparkle");
+
+      document.querySelector("#skyMessage").textContent =
+        "A sky full of wishes, and a little magic just for you ✨";
+    };
+
+    document.querySelector("#pauseFlight").onclick = event => {
+      const paused = document
+        .querySelector(".enchanted-sky")
+        .classList.toggle("flight-paused");
+
+      event.currentTarget.textContent =
+        paused ? "Resume flight" : "Pause flight";
+
+      event.currentTarget.setAttribute(
+        "aria-pressed", String(paused)
+      );
+    };
+  }
+
+  const journeyScene =
+    document.querySelector(".letter-journey");
+
+  if (journeyScene) {
+    const flight = document.querySelector(".letter-flight");
+    const status = document.querySelector("#journeyStatus");
+
+    flight.onanimationend = event => {
+      if (event.animationName === "letter-to-elves") {
+        journeyScene.classList.add("journey-arrived");
+        status.textContent =
+          "A little wonder at the elves’ doorstep ✧";
+      }
+    };
+
+    document.querySelector("#replayJourney").onclick = () => {
+      journeyScene.classList.remove(
+        "journey-arrived",
+        "journey-paused"
+      );
+
+      flight.style.animation = "none";
+      void flight.offsetWidth;
+      flight.style.animation = "";
+
+      status.textContent =
+        "Sealed with a little Christmas sparkle…";
+
+      const pause = document.querySelector("#pauseJourney");
+      pause.textContent = "Pause";
+      pause.setAttribute("aria-pressed", "false");
+    };
+
+    document.querySelector("#pauseJourney").onclick = event => {
+      const paused =
+        journeyScene.classList.toggle("journey-paused");
+
+      event.currentTarget.textContent =
+        paused ? "Play" : "Pause";
+
+      event.currentTarget.setAttribute(
+        "aria-pressed",
+        String(paused)
+      );
+    };
+  }
+
+  document.title = (
+    ["parents","followup"].includes(page)
+      ? "Grown-ups’ Post Office"
+      : "North Pole Express"
+  ) + " · Christmas Magic";
+
+  showDraftStatus();
+}
+
+/* =========================================================
+   PRIVATE CUSTOMER LETTERS + WISHLISTS
+   SUPABASE
+   ========================================================= */
+
+let signedInUserId = null;
+let draftReady = false;
+let draftLoading = false;
+let draftSaveTimer = null;
+let draftVersion = 0;
+let draftChangeVersion = 0;
+let saveSerial = Promise.resolve();
+let draftLoadFailed = false;
+
+const draftClient = () =>
+  window.northPoleSupabase || null;
+
+const validGiftIds = new Set(gifts.map(g => g.id));
+
+function emptyChristmasState() {
+  state.child = "";
+  state.wishes = "";
+  state.proud = "";
+  state.more = "";
+  state.gifts = [];
+  state.parent = {};
+  state.filter = "All";
+}
+
+function draftLoadingBlocked() {
+  if (!signedInUserId) return false;
+
+  if (draftLoading || draftLoadFailed || !draftReady) {
+    showDraftStatus(
+      draftLoadFailed
+        ? "Your saved letter could not be loaded. Please refresh before editing."
+        : "Opening your saved Christmas letter…",
+      draftLoadFailed
+    );
+    return true;
+  }
+
+  return false;
+}
+
+function draftPayload(userId) {
+  return {
+    user_id: userId,
+    child: String(state.child).slice(0, 50),
+    wishes: String(state.wishes).slice(0, 2000),
+    proud: String(state.proud).slice(0, 1500),
+    more: String(state.more).slice(0, 6000),
+    gifts: state.gifts.filter(
+      id => validGiftIds.has(id)
+    )
+  };
+}
+
+function showDraftStatus(message, isError = false) {
+  const route = location.hash.slice(1);
+
+  if (!["write", "gifts"].includes(route)) return;
+
+  let status = document.getElementById(
+    "northPoleDraftStatus"
+  );
+
+  if (!status) {
+    status = document.createElement("p");
+    status.id = "northPoleDraftStatus";
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+
+    status.style.cssText =
+      "font-size:13px;text-align:center;" +
+      "margin:12px;color:#69463a";
+
+    const container =
+      document.querySelector("#letter") ||
+      document.querySelector(".basket");
+
+    container?.append(status);
+  }
+
+  if (!status) return;
+
+  if (message) {
+    status.textContent = message;
+  } else if (draftLoading) {
+    status.textContent = "Opening your saved Christmas letter…";
+  } else if (draftLoadFailed) {
+    status.textContent =
+      "Your saved letter couldn't load. Please refresh before editing.";
+  } else if (!signedInUserId) {
+    status.textContent =
+      "Log in to save your letter and gifts for future visits.";
+  } else if (draftReady) {
+    status.textContent =
+      "Your Christmas wishes are saved to your private account.";
+  }
+
+  status.style.color = isError || draftLoadFailed
+    ? "#ad2638"
+    : "#69463a";
+}
+
+function scheduleDraftSave() {
+  if (
+    !draftReady ||
+    draftLoading ||
+    draftLoadFailed ||
+    !signedInUserId ||
+    !draftClient()
+  ) {
+    return;
+  }
+
+  clearTimeout(draftSaveTimer);
+
+  const userId = signedInUserId;
+  const version = draftVersion;
+  const change = ++draftChangeVersion;
+
+  draftSaveTimer = setTimeout(() => {
+    if (
+      version !== draftVersion ||
+      userId !== signedInUserId
+    ) {
+      return;
+    }
+
+    const payload = draftPayload(userId);
+
+    saveSerial = saveSerial
+      .catch(() => {})
+      .then(async () => {
+        if (
+          version !== draftVersion ||
+          userId !== signedInUserId
+        ) {
+          return;
+        }
+
+        const { error } = await draftClient()
+          .from("santa_drafts")
+          .upsert(payload, {
+            onConflict: "user_id"
+          });
+
+        if (error) throw error;
+
+        if (
+          version === draftVersion &&
+          userId === signedInUserId &&
+          change === draftChangeVersion
+        ) {
+          showDraftStatus(
+            "✓ Saved privately to your Christmas account"
+          );
+        }
+      })
+      .catch(error => {
+        console.error("North Pole draft save failed:", error);
+
+        if (
+          version === draftVersion &&
+          userId === signedInUserId
+        ) {
+          showDraftStatus(
+            "Your changes could not be saved. Please try again.",
+            true
+          );
+        }
+      });
+
+  }, 650);
+}
+
+async function setChristmasAccount(user) {
+  const newUserId = user?.id || null;
+
+  if (
+    newUserId === signedInUserId &&
+    (draftReady || draftLoading)
+  ) {
+    return;
+  }
+
+  const version = ++draftVersion;
+
+  clearTimeout(draftSaveTimer);
+
+  signedInUserId = newUserId;
+  draftReady = false;
+  draftLoading = Boolean(newUserId);
+  draftLoadFailed = false;
+
+  emptyChristmasState();
+  render();
+
+  if (!newUserId) return;
+
+  const client = draftClient();
+
+  if (!client) {
+    draftLoading = false;
+    draftLoadFailed = true;
+    showDraftStatus();
+    return;
+  }
+
+  try {
+    const { data, error } = await client
+      .from("santa_drafts")
+      .select("child,wishes,proud,more,gifts")
+      .eq("user_id", newUserId)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (
+      version !== draftVersion ||
+      signedInUserId !== newUserId
+    ) {
+      return;
+    }
+
+    state.child =
+      typeof data?.child === "string"
+        ? data.child
+        : "";
+
+    state.wishes =
+      typeof data?.wishes === "string"
+        ? data.wishes
+        : "";
+
+    state.proud =
+      typeof data?.proud === "string"
+        ? data.proud
+        : "";
+
+    state.more =
+      typeof data?.more === "string"
+        ? data.more
+        : "";
+
+    state.gifts = Array.isArray(data?.gifts)
+      ? [...new Set(
+          data.gifts.filter(
+            id =>
+              typeof id === "string" &&
+              validGiftIds.has(id)
+          )
+        )]
+      : [];
+
+    draftReady = true;
+    draftLoading = false;
+    draftLoadFailed = false;
+
+    render();
+
+    showDraftStatus(
+      "✓ Your private Santa letter and gifts are ready"
+    );
+
+  } catch (error) {
+    if (version !== draftVersion) return;
+
+    console.error(
+      "North Pole draft loading failed:",
+      error
+    );
+
+    draftLoading = false;
+    draftReady = false;
+    draftLoadFailed = true;
+
+    render();
+    showDraftStatus();
+  }
+}
+
+window.addEventListener(
+  "northpole:auth-ready",
+  event => {
+    setChristmasAccount(
+      event.detail?.user || null
+    );
+  }
+);
+
+/* =========================================================
+   START WEBSITE
+   ========================================================= */
+
+window.addEventListener("hashchange", render);
+render();
